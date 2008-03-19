@@ -1,7 +1,7 @@
 # $Author: ddumont $
-# $Date: 2007/10/24 16:00:10 $
-# $Name:  $
-# $Revision: 1.2 $
+# $Date: 2008-02-26 13:36:21 $
+# $Name: not supported by cvs2svn $
+# $Revision: 1.4 $
 
 #    Copyright (c) 2007 Dominique Dumont.
 #
@@ -230,16 +230,36 @@
        'config_class_name'
        => {
 	   type => 'leaf',
-	    level => 'hidden',
+	   level => 'hidden',
+	   value_type => 'reference', 
 	   refer_to => '! class',
 	   warp => {  follow => { t => '?type', ct => '?cargo_type'},
 		      rules  => [ '$t eq "node" or $t eq "warped_node" or $ct eq "node"' 
-				  => { value_type => 'reference', 
+				  => { 
 				       # should be able to warp refer_to ??
 				       level => 'normal',
 				     },
 				]
 		   }
+	  },
+
+       'replace'
+       => {
+	   type => 'hash',
+	   index_type => 'string',
+	   level => 'hidden',
+	   warp => {  follow => { 't' => '?type' , ct => '?cargo_type' },
+		      'rules'
+		      => [ '$t eq "leaf" or $ct eq "leaf"' 
+			   => {
+			       level => 'normal',
+			      }
+			 ]
+		   },
+	   cargo_type => 'leaf',
+	   # TBD this could be a reference if we restrict replace to
+	   # enum value...
+	   cargo_args => { value_type => 'string' } ,
 	  },
 
        'help'

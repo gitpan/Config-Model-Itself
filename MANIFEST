@@ -2,12 +2,12 @@ Build.PL
 ChangeLog
 README
 config-model-edit
-data/CheckListExamples.pl
-data/HashIdOfValues.pl
 data/MasterModel.pl
-data/WarpedId.pl
-data/WarpedValues.pl
-data/X_base_class.pl
+data/MasterModel/CheckListExamples.pl
+data/MasterModel/HashIdOfValues.pl
+data/MasterModel/WarpedId.pl
+data/MasterModel/WarpedValues.pl
+data/MasterModel/X_base_class.pl
 lib/Config/Model/Itself.pm
 lib/Config/Model/models/Itself/CargoElement.pl
 lib/Config/Model/models/Itself/Class.pl
@@ -20,3 +20,5 @@ lib/Config/Model/models/Itself/WarpValue.pl
 MANIFEST			This list of files
 t/itself.t
 META.yml
+t/load_write_itself.t
+t/pod.t

@@ -1,7 +1,6 @@
 # $Author: ddumont $
-# $Date: 2007/10/25 12:01:29 $
-# $Name:  $
-# $Revision: 1.2 $
+# $Date: 2008-03-10 13:39:10 $
+# $Revision: 1.5 $
 
 #    Copyright (c) 2007 Dominique Dumont.
 #
@@ -35,13 +34,13 @@ use File::Basename ;
 
 use vars qw($VERSION) ;
 
-$VERSION = sprintf "%d.%03d", q$Revision: 1.2 $ =~ /(\d+)\.(\d+)/;
+$VERSION = sprintf "1.%04d", q$Revision: 541 $ =~ /(\d+)/;
 
 my $logger = Log::Log4perl::get_logger(__PACKAGE__);
 
 =head1 NAME
 
-Config::Model::Itself - Model for Config::Model
+Config::Model::Itself - Model of Config::Model
 
 =head1 SYNOPSIS
 
@@ -144,6 +143,8 @@ sub read_all {
     my $model_obj = $self->{model_object};
     my $dir = $args{conf_dir} 
       || croak __PACKAGE__," read_all: undefined config dir";
+    my $model = $args{root_model} 
+      || croak __PACKAGE__," read_all: undefined root_model";
 
     unless (-d $dir ) {
 	croak __PACKAGE__," read_all: unknown config dir $dir";
@@ -152,7 +153,11 @@ sub read_all {
     my @files ;
     my $wanted = sub { 
 	my $n = $File::Find::name ;
-	push @files, $n if (-f $_ and not /~$/ and $n !~ /CVS/) ;
+	push @files, $n if (-f $_ and not /~$/ 
+			    and $n !~ /CVS/
+			    and $n !~ m!.svn!
+			    and $n =~ /\b$model/
+			   ) ;
     } ;
     find ($wanted, $dir ) ;
 
@@ -285,16 +290,39 @@ sub write_all {
 
     my $i = $model_obj->instance ;
 
+    # get list of all classes loaded by the editor
+    my %loaded_classes 
+      = map { ($_ => 1); } 
+	$model_obj->fetch_element('class')->get_all_indexes ;
+
+    # remove classes that are listed in map
     foreach my $file (keys %$map) {
+	foreach my $class_name (@{$map->{$file}}) {
+	    delete $loaded_classes{$class_name} ;
+	}
+    }
+
+    # add remaining classes in map
+    my %new_map =  map { 
+	my $f = $_; 
+	$f =~ s!::!/!g; 
+	("$f.pl" => [ $_ ]) ;
+    } keys %loaded_classes ;
+
+    my %map_to_write = (%$map,%new_map) ;
+
+    foreach my $file (keys %map_to_write) {
 	$logger->info("writing config file $file");
 
 	my @data ;
 
-	foreach my $class_name (@{$map->{$file}}) {
+	foreach my $class_name (@{$map_to_write{$file}}) {
 	    $logger->info("writing class $class_name");
 	    my $model 
 	      = $self-> get_perl_data_model(class_name   => $class_name) ;
 	    push @data, $model ;
+	    # remove class name from above list
+	    delete $loaded_classes{$class_name} ;
 	}
 
 	my $wr_file = "$dir/$file" ;

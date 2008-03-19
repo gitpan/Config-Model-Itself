@@ -1,22 +1,22 @@
 ---
 name: Config-Model-Itself
-version: 0.101
+version: 0.102
 author:
   - Dominique Dumont (ddumont at cpan dot org)
 abstract: Configuration model for Config::Model
 license: lgpl
 resources:
-  license: http://opensource.org/licenses/artistic-license.php
+  license: http://opensource.org/licenses/lgpl-license.php
 requires:
-  Config::Model: 0.614
+  Config::Model: 0.617
   Log::Log4perl: 0
 recommends:
   Config::Model::CursesUI: 1.004
 provides:
   Config::Model::Itself:
     file: lib/Config/Model/Itself.pm
-    version: 1.002
-generated_by: Module::Build version 0.2808
+    version: 1.0541
+generated_by: Module::Build version 0.280801
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.2.html
   version: 1.2
