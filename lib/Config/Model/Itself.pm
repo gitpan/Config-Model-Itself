@@ -1,8 +1,8 @@
 # $Author: ddumont $
-# $Date: 2008-03-10 13:39:10 $
-# $Revision: 1.5 $
+# $Date: 2008-04-03 19:12:21 +0200 (Thu, 03 Apr 2008) $
+# $Revision: 583 $
 
-#    Copyright (c) 2007 Dominique Dumont.
+#    Copyright (c) 2007-2008 Dominique Dumont.
 #
 #    This file is part of Config-Model-Itself.
 #
@@ -34,13 +34,13 @@ use File::Basename ;
 
 use vars qw($VERSION) ;
 
-$VERSION = sprintf "1.%04d", q$Revision: 541 $ =~ /(\d+)/;
+$VERSION = sprintf "1.%04d", q$Revision: 583 $ =~ /(\d+)/;
 
 my $logger = Log::Log4perl::get_logger(__PACKAGE__);
 
 =head1 NAME
 
-Config::Model::Itself - Model of Config::Model
+Config::Model::Itself - Model editor for Config::Model
 
 =head1 SYNOPSIS
 
@@ -79,7 +79,9 @@ Config::Model::Itself - Model of Config::Model
 =head1 DESCRIPTION
 
 The Config::Itself and its model files provide a model of Config:Model
-(hence the Itself name).
+(hence the Itself name). If you install also Config::Model::TkUI, you
+get a graphical configuration model editor. In others words, you get a
+GUI to edit configuration models like Xorg model.
 
 Let's step back a little to explain. Any configuration data is, in
 essence, structured data. This data could be stored in an XML file. A
@@ -111,7 +113,7 @@ L<Config::Model::Node> class.
 
 =cut
 
-# find all .pl file in conf_dir and load them...
+# find all .pl file in model_dir and load them...
 
 sub new {
     my $type = shift ;
@@ -128,9 +130,9 @@ sub new {
 
 =head2 Methods
 
-=head1 read_all ( conf_dir => ...)
+=head1 read_all ( model_dir => ...)
 
-Load all the model files contained in C<conf_dir> and all its
+Load all the model files contained in C<model_dir> and all its
 subdirectories.
 
 C<read_all> returns a hash ref containing ( class_name => file_name , ...)
@@ -141,7 +143,7 @@ sub read_all {
     my $self = shift ;
     my %args = @_ ;
     my $model_obj = $self->{model_object};
-    my $dir = $args{conf_dir} 
+    my $dir = $args{model_dir} 
       || croak __PACKAGE__," read_all: undefined config dir";
     my $model = $args{root_model} 
       || croak __PACKAGE__," read_all: undefined root_model";
@@ -175,7 +177,7 @@ sub read_all {
 	my @models = $tmp_model -> load ( 'Tmp' , $file ) ;
 
 	my $rel_file = $file ;
-	$rel_file =~ s/^$dir\///;
+	$rel_file =~ s/^$dir\/?//;
 	die "wrong reg_exp" if $file eq $rel_file ;
 	$class_file_map{$rel_file} = \@models ;
 
@@ -268,7 +270,7 @@ sub get_perl_data_model{
     return $model ;
 }
 
-=head2 write_all ( conf_dir => ... )
+=head2 write_all ( model_dir => ... )
 
 Will write back configuration model in the specified directory. The
 structure of the read directory is respected.
@@ -279,7 +281,7 @@ sub write_all {
     my $self = shift ;
     my %args = @_ ;
     my $model_obj = $self->{model_object} ;
-    my $dir = $args{conf_dir} 
+    my $dir = $args{model_dir} 
       || croak __PACKAGE__," write_all: undefined config dir";
 
     my $map = $self->{map} ;

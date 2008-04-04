@@ -1,3 +1,21 @@
+2008-04-03  Dominique Dumont v0.201
+
+	* lib/Config/Model/models/Itself/Element.pl: Fixed element and
+	cargo models. 
+
+2008-03-24  Domi  <domi@bilbo.maison>
+
+	* lib/Config/Model/models/Itself/WarpableElement.pl: added
+	description for 'replace' element
+
+2008-03-20  Dominique Dumont
+
+	* lib/Config/Model/models/Itself/WarpableElement.pl: removed
+	enum_integer type
+
+	* config-model-edit: Clarified where models are read and
+	written. 
+
 2008-03-18  Dominique Dumont  v0.102
 
 	* config-model-edit: Now use Config::Model::TkUI instead of
