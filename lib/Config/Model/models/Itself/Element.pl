@@ -1,6 +1,6 @@
 # $Author: ddumont $
-# $Date: 2008-04-03 19:12:21 +0200 (Thu, 03 Apr 2008) $
-# $Revision: 583 $
+# $Date: 2008-05-01 16:41:22 +0200 (Thu, 01 May 2008) $
+# $Revision: 641 $
 
 #    Copyright (c) 2007-2008 Dominique Dumont.
 #
@@ -21,234 +21,108 @@
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 
 [
-  [
-   name => "Itself::Element",
+ [
+  name => "Itself::Element",
 
-   include => 'Itself::WarpableElement' ,
-   include_after => 'cargo_type',
+  include => ['Itself::NonWarpableElement' ,'Itself::WarpableElement'],
+  include_after => 'type' , 
 
-   'element' 
-   => [
+  'element' 
+  => [
 
-       # structural information
-       'type' => { type => 'leaf',
-		   value_type => 'enum',
-		   choice => [qw/node warped_node leaf hash list check_list/],
-		   mandatory => 1 ,
-		   description => 'specify the type of the configuration element. Leaf is used for plain value.',
-		 },
+      # structural information
+      'type' => { type => 'leaf',
+		  value_type => 'enum',
+		  choice => [qw/node warped_node hash list leaf check_list/],
+		  mandatory => 1 ,
+		  description => 'specify the type of the configuration element.'
+		               . 'Leaf is used for plain value.',
+		},
 
-       # warp often depend on this one, so list it first
-       'value_type' 
-       => { type => 'leaf',
-	    level => 'hidden',
-	    value_type => 'enum',
-	    'warp'
-	    => { follow => { 't' => '- type' },
-		 'rules'
-		 => [ '$t eq "leaf"' 
-		      => {
-			  choice => [qw/boolean enum integer reference
-					number uniline string/],
-			  level => 'normal',
-			  mandatory => 1,
-			 }
-		    ]
-	       }
-	  },
+      # all elements
+      'status' 
+      => {
+	  type => 'leaf',
+	  value_type => 'enum', 
+	  choice => [qw/obsolete deprecated standard/],
+	  built_in => 'standard' ,
+	 },
 
-       # hash or list
-       'cargo_type' 
-       => { type => 'leaf',
-	    value_type => 'enum',
-	    level => 'hidden',
-	    warp => { follow => { t => '- type' },
-		     'rules'
-		      => [ '$t eq "hash" or $t eq "list"' 
-			   => {
-			       level => 'normal',
-			       mandatory => 1,
-			       choice => [qw/node leaf/] ,
-			      },
-			 ]
-		    },
-	    description => 'Specify the type of configuration element contained in this hash or list.',
-	  },
-
-       # all elements
-       'status' 
+       'experience' 
        => {
 	   type => 'leaf',
 	   value_type => 'enum', 
-	   choice => [qw/obsolete deprecated standard/],
-	   built_in => 'standard' ,
+	   choice => [qw/master advanced beginner/] ,
+	   built_in => 'beginner',
+	   description => 'Used to categorize configuration elements in several "required skills". Use this feature if you need to hide a parameter to novice users',
 	  },
 
-       'description' 
+       'level' 
        => {
 	   type => 'leaf',
-	   value_type => 'string', 
+	   value_type => 'enum', 
+	   choice => [qw/important normal hidden/] ,
+	   built_in => 'normal',
+	   description => 'Used to highlight important parameter or to hide others. Hidden parameter are mostly used to hide features that are unavailable at start time. They can be made available later using warp mechanism',
 	  },
 
-       # node element (may be within a hash or list)
+      'description' 
+      => {
+	  type => 'leaf',
+	  value_type => 'string', 
+	  description => 'enter help information regarding this element',
+	 },
 
-       # all but warped_node
-       'warp' 
-       => { type => 'warped_node' , # ?
-	    level => 'hidden',
-	    follow => { elt_type => '- type' } ,
-	    rules  => [
-		       '$elt_type ne "node"' =>
-		       {
-			level => 'normal',
-			config_class_name => 'Itself::WarpValue',
-		       }
-		      ] ,
-	    description => "change the properties (i.e. default value or its value_type) dynamically according to the value of another Value object locate elsewhere in the configuration tree. "
-	  },
+      # all but warped_node
+      'warp' 
+      => { type => 'warped_node' , # ?
+	   level => 'hidden',
+	   follow => { elt_type => '- type' } ,
+	   rules  => [
+		      '$elt_type ne "node"' =>
+		      {
+		       level => 'normal',
+		       config_class_name => 'Itself::WarpValue',
+		      }
+		     ] ,
+	   description => "change the properties (i.e. default value or its value_type) dynamically according to the value of another Value object locate elsewhere in the configuration tree. "
+	 },
 
-       # warped_node: warp parameter for warped_node. They must be
-       # warped out when type is not a warped_node
-       'follow' => 
-       => {
-	   type => 'hash',
-	   cargo_type => 'leaf',
-	   index_type => 'string',
-	   level      => 'hidden' ,
-	   'warp'
-	   => { follow => '- type',
-		'rules' => { 'warped_node' => {level => 'normal',},}
-	      },
-	   cargo_args => { value_type => 'uniline' },
-	   description => "Specifies the path to the value elements that drive the change of this node. Each key of the has is a variable name used in the 'rules' parameter. The value of the hash is a path in the configuration tree",
-	  },
-
-       'rules' => {
-                   type => 'hash',
-		   ordered => 1,
-		   level      => 'hidden' ,
-		   cargo_type => 'node',
-		   index_type => 'string',
-		   warp => { follow => '- type',
+      'rules' => {
+		  type => 'hash',
+		  ordered => 1,
+		  level      => 'hidden' ,
+		  index_type => 'string',
+		  warp => {
+			   follow => '- type',
+			   'rules'
+			     => { 'warped_node' => {level => 'normal',}
+				}
+			  },
+		  cargo => { type => 'warped_node',
+			     follow => '- type',
 			     'rules'
 			     => { 'warped_node' 
 				  => {
-				      config_class_name => 'Itself::WarpableElement' ,
-				      level => 'normal',
+				      config_class_name => 'Itself::WarpOnlyElement' ,
 				     }
 				}
 			   },
-		   description => "Each key of a hash is a boolean expression using variables declared in the 'follow' parameters. The value of the hash specifies the effects on the node",
-		   },
-
-       'morph' => 
-       => {
-	   type => 'leaf',
-	   level      => 'hidden' ,
-	   value_type => 'boolean', 
-	   'warp'
-	   => { follow => '- type',
-		'rules'
-		=> { 'warped_node' 
-		     => {
-			 level => 'normal',
-			 built_in => 0 ,
-			},
-		   }
-	      },
-	   description => "When set, a recurse copy of the value from the old object to the new object will be attemped. When a copy is not possible, undef values will be assigned.",
-	  },
-
-       # end warp elements for warped_node
-
-       # leaf element
-
-       'refer_to' 
-       => { type => 'leaf',
-	    level      => 'hidden' ,
-	    value_type => 'uniline',
-	    warp => { follow => { t  => '- type',
-				  vt => '- value_type',
-				},
-		     'rules'
-		      => [ '   $t  eq "check_list"
-                            or $vt eq "reference"  '
-			   => {
-			       level => 'important',
-			      },
-			 ]
-		    },
-	    description => "points to an array or hash element in the configuration tree using the path syntax. The available choice of this reference value (or check list)is made from the available keys of the pointed hash element or the values of the pointed array element.",
-	  },
-
-       'computed_refer_to' 
-       => { type => 'warped_node',
-	    follow => { t  => '- type',
-			vt => '- value_type',
-		      },
-	    'rules'
-	    => [ '   $t  eq "check_list" 
-                  or $vt eq "reference"  '
-		 => {
-		     level => 'normal',
-		     config_class_name => 'Itself::ComputedValue',
-		    },
-	       ],
-	    description => "points to an array or hash element in the configuration tree using a path computed with value from several other elements in the configuration tree. The available choice of this reference value (or check list) is made from the available keys of the pointed hash element or the values of the pointed array element.",
-	  },
-
- 
-       'compute' 
-       => { type => 'warped_node',
-
-	    follow => { t  => '- type',
-		      },
-	    'rules' => [ '$t  eq "leaf"'
-			 => {
-			     level => 'normal',
-			     config_class_name => 'Itself::ComputedValue',
-			    },
-		       ],
-	    description => "compute the default value according to a formula and value from other elements in the configuration tree.",
-	  },
-
-
-       # hash element
-
-       'index_type' 
-       => { type => 'leaf',
-	    value_type => 'enum',
-	    level      => 'hidden' ,
-	    warp => { follow => '?type',
-		     'rules'
-		      => { 'hash' => {
-				      level => 'important',
-				      #mandatory => 1,
-				      choice => [qw/string integer/] ,
-				     }
-			 }
-		    },
-	    description => 'Specify the type of allowed index for the hash. "String" means no restriction.',
-	  },
-
-       # list element
-
-
-       # hash or list
-       'cargo_args' 
-       => { type => 'warped_node',
-	    level => 'hidden',
-	    follow => { 't' => '- type' },
-	    'rules' => [ '$t eq "list" or $t eq "hash"' 
-			   => {
-			       level => 'normal',
-			       config_class_name => 'Itself::CargoElement',
-			      },
-		       ],
-	    description => 'Specify the properties of the configuration element configuration in this hash or list',
-	  },
-      ],
-
-  ],
-
+		  description => "Each key of a hash is a boolean expression using variables declared in the 'follow' parameters. The value of the hash specifies the effects on the node",
+		 },
+      # hash or list
+      'cargo' 
+      => { type => 'warped_node',
+	   level => 'hidden',
+	   follow => { 't' => '- type' },
+	   'rules' => [ '$t eq "list" or $t eq "hash"' 
+			=> {
+			    level => 'normal',
+			    config_class_name => 'Itself::CargoElement',
+			   },
+		      ],
+	   description => 'Specify the properties of the configuration element configuration in this hash or list',
+	 },
+     ],
+ ],
 ];

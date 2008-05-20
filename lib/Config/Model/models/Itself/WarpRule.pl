@@ -1,9 +1,8 @@
 # $Author: ddumont $
-# $Date: 2008-03-20 14:26:46 +0100 (Thu, 20 Mar 2008) $
-# $Name: not supported by cvs2svn $
-# $Revision: 552 $
+# $Date: 2008-04-15 14:14:43 +0200 (Tue, 15 Apr 2008) $
+# $Revision: 609 $
 
-#    Copyright (c) 2007 Dominique Dumont.
+#    Copyright (c) 2007-2008 Dominique Dumont.
 #
 #    This file is part of Config-Model-Itself.
 #
@@ -38,7 +37,7 @@
 
        'effect' => {
 		    type => 'node',
-		    config_class_name => 'Itself::WarpableElement',
+		    config_class_name => 'Itself::WarpOnlyElement',
 		    description => 'Specified the property changes to be applied when the associated condition is true',
 		   },
       ],

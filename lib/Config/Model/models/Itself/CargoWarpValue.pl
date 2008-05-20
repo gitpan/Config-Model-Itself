@@ -1,6 +1,6 @@
 # $Author: ddumont $
-# $Date: 2008-04-15 14:14:43 +0200 (Tue, 15 Apr 2008) $
-# $Revision: 609 $
+# $Date: 2008-03-20 14:26:46 +0100 (Thu, 20 Mar 2008) $
+# $Revision: 552 $
 
 #    Copyright (c) 2007-2008 Dominique Dumont.
 #
@@ -22,9 +22,9 @@
 
 [
   [
-   name => "Itself::WarpValue",
+   name => "Itself::CargoWarpValue",
 
-   class_description => 'Warp functionality enable a Value object to change its properties (i.e. default value or its type) dynamically according to the value of another Value object locate elsewhere in the configuration tree.',
+   class_description => 'Warp functionality enable a Value object to change its properties (i.e. default value or its type) dynamically according to the value of another Value object locate elsewhere in the configuration tree. This class is to be used within cargo of a hash or list element',
 
    'element' 
    => [
@@ -40,7 +40,7 @@
 		   ordered => 1,
 		   index_type => 'string',
 		   cargo => { type => 'node',
-			      config_class_name => 'Itself::WarpOnlyElement' ,
+			      config_class_name => 'Itself::WarpableCargoElement' ,
 			    },
 		   description => 'Specify several test (as formula using the variables defined in "follow" element) to try in sequences and their associated effects',
 		  },

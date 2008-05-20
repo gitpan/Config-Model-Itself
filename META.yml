@@ -1,21 +1,23 @@
 ---
 name: Config-Model-Itself
-version: 0.201
+version: 0.202
 author:
   - Dominique Dumont (ddumont at cpan dot org)
-abstract: Configuration model editor for Config::Model
+abstract: Editor for Config::Model data files
 license: lgpl
 resources:
   license: http://opensource.org/licenses/lgpl-license.php
 requires:
   Config::Model: 0.621
+  Config::Model::TkUI: 0.105
   Log::Log4perl: 0
-recommends:
-  Config::Model::TkUI: 0
 provides:
   Config::Model::Itself:
     file: lib/Config/Model/Itself.pm
-    version: 1.0583
+    version: 1.0641
+  Config::Model::Itself::TkEditUI:
+    file: lib/Config/Model/Itself/TkEditUI.pm
+    version: 1.0615
 generated_by: Module::Build version 0.280801
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.2.html

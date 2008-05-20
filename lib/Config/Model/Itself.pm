@@ -1,6 +1,6 @@
 # $Author: ddumont $
-# $Date: 2008-04-03 19:12:21 +0200 (Thu, 03 Apr 2008) $
-# $Revision: 583 $
+# $Date: 2008-05-01 16:41:22 +0200 (Thu, 01 May 2008) $
+# $Revision: 641 $
 
 #    Copyright (c) 2007-2008 Dominique Dumont.
 #
@@ -34,7 +34,7 @@ use File::Basename ;
 
 use vars qw($VERSION) ;
 
-$VERSION = sprintf "1.%04d", q$Revision: 583 $ =~ /(\d+)/;
+$VERSION = sprintf "1.%04d", q$Revision: 641 $ =~ /(\d+)/;
 
 my $logger = Log::Log4perl::get_logger(__PACKAGE__);
 
@@ -66,7 +66,7 @@ Config::Model::Itself - Model editor for Config::Model
  # create Curses user interface
  my $dialog = Config::Model::CursesUI-> new
       (
-       permission => 'advanced',
+       experience => 'advanced',
        store => $wr_back,
       ) ;
 
@@ -130,10 +130,12 @@ sub new {
 
 =head2 Methods
 
-=head1 read_all ( model_dir => ...)
+=head1 read_all ( model_dir => ... , root_model => ... , [ force_load => 1 ] )
 
 Load all the model files contained in C<model_dir> and all its
-subdirectories.
+subdirectories. C<root_model> is used to filter the classes read. 
+
+Use C<force_load> if you are trying to load a model containing errors.
 
 C<read_all> returns a hash ref containing ( class_name => file_name , ...)
 
@@ -147,6 +149,8 @@ sub read_all {
       || croak __PACKAGE__," read_all: undefined config dir";
     my $model = $args{root_model} 
       || croak __PACKAGE__," read_all: undefined root_model";
+    my $force_load = $args{force_load} || 0 ;
+    my $legacy = $args{legacy} ;
 
     unless (-d $dir ) {
 	croak __PACKAGE__," read_all: unknown config dir $dir";
@@ -173,7 +177,7 @@ sub read_all {
 	# now apply some translation to read model
 	# - translate legacy warp parameters
 	# - expand elements name
-	my $tmp_model = Config::Model -> new( skip_include => 1 ) ;
+	my $tmp_model = Config::Model -> new( skip_include => 1, legacy => $legacy ) ;
 	my @models = $tmp_model -> load ( 'Tmp' , $file ) ;
 
 	my $rel_file = $file ;
@@ -181,12 +185,12 @@ sub read_all {
 	die "wrong reg_exp" if $file eq $rel_file ;
 	$class_file_map{$rel_file} = \@models ;
 
-	# - move permission, description and level status into parameter info.
+	# - move experience, description and level status into parameter info.
 	foreach my $model_name (@models) {
 	    # no need to dclone model as Config::Model object is temporary
 	    my $new_model =  $tmp_model -> get_model( $model_name ) ;
 
-	    foreach my $item (qw/description level permission status/) {
+	    foreach my $item (qw/description level experience status/) {
 		foreach my $elt_name (keys %{$new_model->{element}}) {
 		    my $moved_data = delete $new_model->{$item}{$elt_name}  ;
 		    next unless defined $moved_data ;
@@ -224,13 +228,13 @@ sub read_all {
     map { $class_element->fetch_with_id($_) } keys %read_models ;
 
     #print Dumper \@read_models ;
-    #require Tk::ObjScanner; Tk::ObjScanner::scan_object(\@read_models) ;
-    #$model_obj->instance->push_no_value_check(qw/store fetch type/) ;
+    #require Tk::ObjScanner; Tk::ObjScanner::scan_object(\%read_models) ;
+    $model_obj->instance->push_no_value_check(qw/store fetch type/) if $force_load;
 
     $logger->info("loading all extracted data in Config::Model::Itself");
     $model_obj->load_data( {class => \%read_models} ) ;
 
-    #$model_obj->instance->pop_no_value_check() ;
+    $model_obj->instance->pop_no_value_check() if $force_load;
 
     return $self->{map} = \%class_file_map ;
 }
@@ -252,17 +256,17 @@ sub get_perl_data_model{
     # - Do NOT translate legacy warp parameters
     # - Do not compact elements name
 
-    # - move permission, description and level status back in class info.
-    my $all_elt_data = $model->{element} || [] ;
-    for (my $i = 0 ; $i < @$all_elt_data; $i ++) {
-	my $elt_name = $all_elt_data->[$i++] ;
-	my $elt_data = $all_elt_data->[$i] ;
-	foreach my $item (qw/description level permission status/) {
-	    my $moved_data = delete $elt_data->{$item}  ;
-	    next unless defined $moved_data ;
-	    push @{$model->{$item}}, $elt_name, $moved_data ; 
-	}
-    } 
+    # - move experience, description and level status back in class info.
+    # my $all_elt_data = $model->{element} || [] ;
+    # for (my $i = 0 ; $i < @$all_elt_data; $i ++) {
+    # 	my $elt_name = $all_elt_data->[$i++] ;
+    # 	my $elt_data = $all_elt_data->[$i] ;
+    # 	foreach my $item (qw/description/) {
+    # 	    my $moved_data = delete $elt_data->{$item}  ;
+    # 	    next unless defined $moved_data ;
+    # 	    push @{$model->{$item}}, $elt_name, $moved_data ; 
+    # 	}
+    # } 
 
     # don't forget to add name
     $model->{name} = $class_name ;
@@ -341,6 +345,59 @@ sub write_all {
     }
 
 }
+
+
+=head2 list_class_element
+
+Returns a string listing all the class and elements. Useful for
+debugging your configuration model.
+
+=cut
+
+sub list_class_element {
+    my $self = shift ;
+    my $pad  =  shift || '' ;
+
+    my $res = '';
+    my $meta_class = $self->{model_object}->fetch_element('class') ;
+    foreach my $class_name ($meta_class->get_all_indexes ) {
+	$res .= $self->list_one_class_element($class_name) ;
+    }
+    return $res ;
+}
+
+sub list_one_class_element {
+    my $self = shift ;
+    my $class_name = shift || return '' ;
+    my $pad  =  shift || '' ;
+
+    my $res = $pad."Class: $class_name\n";
+    my $meta_class = $self->{model_object}->fetch_element('class')
+       -> fetch_with_id($class_name) ;
+
+    my @elts = $meta_class->fetch_element('element')->get_all_indexes ;
+
+    my @include = $meta_class->fetch_element('include')->fetch_all_values ;
+    my $inc_after = $meta_class->grab_value('include_after') ;
+
+    if (@include and not defined $inc_after) {
+	map { $res .= $self->list_one_class_element($_,$pad.'  ') ;} @include ;
+    }
+
+    return $res unless @elts ;
+
+    foreach my $elt_name ( @elts) {
+	my $type = $meta_class->grab_value("element:$elt_name type") ;
+
+	$res .= $pad."  - $elt_name ($type)\n";
+	if (@include and defined $inc_after and $inc_after eq $elt_name) {
+	    map { $res .=$self->list_one_class_element($_,$pad.'  ') ;} @include ;
+	}
+    }
+    return $res ;
+}
+
+
 1;
 
 __END__

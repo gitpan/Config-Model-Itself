@@ -1,9 +1,8 @@
 # $Author: ddumont $
-# $Date: 2008-03-20 14:26:46 +0100 (Thu, 20 Mar 2008) $
-# $Name: not supported by cvs2svn $
-# $Revision: 552 $
+# $Date: 2008-05-09 17:45:50 +0200 (Fri, 09 May 2008) $
+# $Revision: 655 $
 
-#    Copyright (c) 2007 Dominique Dumont.
+#    Copyright (c) 2007-2008 Dominique Dumont.
 #
 #    This file is part of Config-Model-Itself.
 #
@@ -27,28 +26,41 @@
 
    'element' 
    => [
+       'variables',
+       => {
+	   type => 'hash',
+	   index_type => 'string' ,
+	   cargo => { type => 'leaf', value_type => 'uniline' } ,
+	   description => 'Specify where to find the variables using path notation. For the formula "$a + $b", you need to specify "a => \'- a_path\', b => \'! b_path\' ',
+	  },
+
        'formula' => { type => 'leaf',
 		      value_type => 'string',
 		      # making formula mandatory makes mandatory setting the
 		      # compute parameter for a leaf. That's not a
 		      # desired behavior.
 		      # mandatory => 1 ,
+		      description => 'Specify how the computation is done. This string can a Perl expression for integer value or a template for string values. Variables have the same notation than in Perl. Example "$a + $b" ',
 		    },
-       ['variables','replace']
+       'replace'
        => {
 	   type => 'hash',
-	   cargo_type => 'leaf',
 	   index_type => 'string' ,
-	   cargo_args => { value_type => 'uniline' } ,
+	   cargo => { type => 'leaf', value_type => 'uniline' } ,
+	   description => 'Sometime, using the value of a tree leaf is not enough and you need to substitute a replacement for any value you can get. This replacement can be done using a hash like notation within the formula using the %replace hash. Example $replace{$who} , where "who => \'- who_elt\' ',	  
 	  },
-      ],
 
-   'description'
-   => [
-       formula => 'Specify how the computation is done. This string can a Perl expression for integer value or a template for string values. Variables have the same notation than in Perl. Example "$a + $b" ',
-       variables => 'Specify where to find the variable using path notation. For the formula "$a + $b", you need to specify "a => \'- a_path\', b => \'! b_path\' ',
-       replace => 'Sometime, using the value of a tree leaf is not enough and you need to substitute a replacement for any value you can get. This replacement can be done using a hash like notation within the formula using the %replace hash. Example $replace{$who} , where "who => \'- who_elt\' ',
-      ] ,
+       'allow_override' 
+       => { type => 'leaf',
+
+	    value_type => 'boolean',
+	    built_in   => 0,
+	    level => 'normal',
+	    description => "Allow user to override computed value (ignored if no computation is used for this variable).",
+	 },
+
+
+      ],
 
   ],
 

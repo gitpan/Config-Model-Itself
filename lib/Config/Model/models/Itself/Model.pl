@@ -1,7 +1,7 @@
 # $Author: ddumont $
-# $Date: 2008-03-20 14:26:46 +0100 (Thu, 20 Mar 2008) $
+# $Date: 2008-04-13 18:37:11 +0200 (Sun, 13 Apr 2008) $
 # $Name: not supported by cvs2svn $
-# $Revision: 552 $
+# $Revision: 602 $
 
 #    Copyright (c) 2007 Dominique Dumont.
 #
@@ -31,8 +31,9 @@
        => {
 	   type => 'hash',
 	   index_type => 'string' , 
-	   cargo_type => 'node',
-	   config_class_name => 'Itself::Class' ,
+	   cargo => { type => 'node',
+		      config_class_name => 'Itself::Class' ,
+		    },
 	  },
 
       ],

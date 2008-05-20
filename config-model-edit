@@ -27,16 +27,20 @@ use Getopt::Long ;
 use Pod::Usage ;
 use Log::Log4perl ;
 use Config::Model::Itself ;
+use Tk ;
+use Config::Model::TkUI ;
+use Config::Model::Itself::TkEditUI ;
 
 # lame tracing that will be replaced by Log4perl
 use vars qw/$verbose $debug $VERSION/ ;
 
-$VERSION = sprintf "1.%04d", q$Revision: 583 $ =~ /(\d+)/;
+$VERSION = sprintf "1.%04d", q$Revision: 645 $ =~ /(\d+)/;
 
 $verbose = 0;
 $debug = 0;
 
-my $log4perl_conf_file = '/etc/log4config-model.conf' ;
+my $system_log4perl_conf_file = '/etc/log4config-model-edit.conf' ;
+my $user_log4perl_conf_file = 'log4config-model-edit.conf' ;
 my $fallback_conf = << 'EOC';
 log4perl.logger.ConfigModel=WARN, A1
 log4perl.appender.A1=Log::Dispatch::File
@@ -45,32 +49,14 @@ log4perl.appender.A1.mode=append
 log4perl.appender.A1.layout=Log::Log4perl::Layout::SimpleLayout
 EOC
 
-my $log4perl_conf = -e $log4perl_conf_file ? $log4perl_conf_file 
-                  :                          \$fallback_conf ;
+my $log4perl_conf 
+    = -e $user_log4perl_conf_file   ? $user_log4perl_conf_file 
+    : -e $system_log4perl_conf_file ? $system_log4perl_conf_file 
+    :                                 \$fallback_conf ;
 
 Log::Log4perl::init($log4perl_conf);
 
-
-my $ui_type ;
-
-eval {require Config::Model::TkUI ; } ;
-my $has_tk = $@ ? 0 : 1 ;
-
-eval {require Config::Model::CursesUI ;} ;
-my $has_curses = $@ ? 0 : 1 ;
-
-if ($has_tk) {
-    $ui_type = 'tk';
-}
-elsif ($has_curses) {
-    warn "You should install Config::Model::TkUI for a more friendly user interface\n";
-    $ui_type = 'curses';
-}
-else {
-    warn "You should install Config::Model::TkUI or Config::Model::CursesUI ",
-      "for a more friendly user interface\n";
-    $ui_type = 'shell' ;
-}
+use lib qw/lib/ ;
 
 my $dev_model_dir = 'lib/Config/Model/models/';
 my $root_model ;
@@ -182,7 +168,7 @@ my $help = 0;
 my $force_load = 0;
 my $model_dir ;
 
-my $result = GetOptions ("if=s"             => \$ui_type,
+my $result = GetOptions (
 			 "dir=s"            => \$model_dir,
 			 "model=s"          => \$root_model,
 			 "verbose!"         => \$verbose,
@@ -231,6 +217,7 @@ if (not -e $read_model_dir.'/'.$root_model.'.pl') {
 }
 
 $rw_obj -> read_all( model_dir  => $read_model_dir, 
+		     force_load => $force_load ,
 		     root_model => $root_model ) ;
 
 my $write_sub = sub { 
@@ -238,53 +225,16 @@ my $write_sub = sub {
     $rw_obj->write_all(model_dir => $wr_dir);
 } ;
 
-if ($ui_type eq 'shell') {
-    require Config::Model::TermUI;
-    my $shell_ui = Config::Model::TermUI
-      -> new( root => $meta_root ,
-	      title => $root_model.' configuration',
-	      prompt => ' >',
-	    );
+my $mw = MainWindow-> new ;
+$mw->withdraw ;
 
-    # engage in user interaction
-    $shell_ui -> run_loop ;
-}
-elsif ($ui_type eq 'curses') {
-    my $err_file = '/tmp/config-edit-error.log' ;
-
-    print "In case of error, check $err_file\n";
-
-    open (FH,"> $err_file") || die "Can't open $err_file: $!" ;
-    open STDERR, ">&FH";
-
-    my $dialog = Config::Model::CursesUI-> new
-      (
-       permission => 'advanced',
-       store => $write_sub,
-      ) ;
-
-    # engage in user interaction
-    $dialog->start( $meta_model )  ;
-
-    close FH ;
-}
-elsif ($ui_type eq 'tk') {
-    require Tk;
-    Tk->import ;
-
-    my $mw = MainWindow-> new ;
-    $mw->withdraw ;
-
-    my $cmu = $mw->ConfigModelUI (-root      => $meta_root,
+my $cmu = $mw->ConfigModelEditUI (-root      => $meta_root,
 				  -store_sub => $write_sub,
+				  -model_dir => $read_model_dir,
+				  -model_name => $root_model,
 				 ) ;
 
-    &MainLoop ; # Tk's
-}
-else {
-    die "Unsupported user interface: $ui_type";
-}
-
+&MainLoop ; # Tk's
 
 =head1 AUTHOR
 
