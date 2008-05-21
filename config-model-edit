@@ -34,7 +34,7 @@ use Config::Model::Itself::TkEditUI ;
 # lame tracing that will be replaced by Log4perl
 use vars qw/$verbose $debug $VERSION/ ;
 
-$VERSION = sprintf "1.%04d", q$Revision: 645 $ =~ /(\d+)/;
+$VERSION = sprintf "1.%04d", q$Revision: 680 $ =~ /(\d+)/;
 
 $verbose = 0;
 $debug = 0;
@@ -230,7 +230,8 @@ $mw->withdraw ;
 
 my $cmu = $mw->ConfigModelEditUI (-root      => $meta_root,
 				  -store_sub => $write_sub,
-				  -model_dir => $read_model_dir,
+ 				  -read_model_dir => $read_model_dir,
+ 				  -write_model_dir => $wr_model_dir,
 				  -model_name => $root_model,
 				 ) ;
 
