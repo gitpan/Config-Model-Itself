@@ -80,10 +80,9 @@
    class_description => "Master description",
    level      => [ [qw/hash_a tree_macro int_v/] => 'important' ],
 
-   read_config  => { syntax => 'cds'} ,
-   write_config => [{ syntax => 'cds'},{syntax => 'perl'} ] ,
-   read_config_dir  => 'wr_test/conf_data',
-   write_config_dir => 'wr_test/conf_data',
+   read_config  =>  { backend => 'cds_file',  config_dir  => 'wr_test/conf_data'},
+   write_config => [{ backend => 'cds_file',  config_dir  => 'wr_test/conf_data'},
+		    { backend => 'perl_file', config_dir  => 'wr_test/conf_data'}],
 
    element => [
 	       std_id => { type => 'hash',
@@ -170,6 +169,39 @@
 			     type => 'node',
 			     config_class_name => 'MasterModel::HashIdOfValues',
 			    },
+	       'deprecated_p'
+	       => { type => 'leaf',
+		    value_type => 'enum',
+		    choice => [qw/cds perl ini custom/],
+		    status => 'deprecated',
+		    description => 'deprecated_p is replaced by new_from_deprecated',
+		  },
+
+	       'new_from_deprecated'
+	       => { type => 'leaf',
+		    value_type => 'enum',
+		    choice => [qw/cds_file perl_file ini_file augeas custom/],
+		    migrate_from => { formula => '$replace{$old}' , 
+				      variables => { old => '- deprecated_p' } ,
+				      replace => { 
+						  perl => 'perl_file',
+						  ini  => 'ini_file',
+						  cds  => 'cds_file',
+						 },
+				    },
+		  },
+	       'old_url' => { type => 'leaf',
+			      value_type => 'uniline',
+			      status => 'deprecated',
+			    },
+	       'host' 
+	       => { type => 'leaf',
+		    value_type => 'uniline',
+		    migrate_from => { formula => '$old =~ m!http://([\w\.]+)!; $1 ;' , 
+				      variables => { old => '- old_url' } ,
+				      use_eval => 1 ,
+				    },
+		  },
 	      ],
    description => [
 		   tree_macro => 'controls behavior of other elements'
