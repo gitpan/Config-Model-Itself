@@ -1,9 +1,9 @@
 ---
 name: Config-Model-Itself
-version: 0.204
+version: 0.205
 author:
   - Dominique Dumont (ddumont at cpan dot org)
-abstract: Editor for Config::Model data files
+abstract: Graphical model editor for Config::Model
 license: lgpl
 resources:
   license: http://opensource.org/licenses/lgpl-license.php
