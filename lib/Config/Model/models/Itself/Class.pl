@@ -1,6 +1,6 @@
 # $Author: ddumont $
-# $Date: 2008-07-25 17:11:33 +0200 (Fri, 25 Jul 2008) $
-# $Revision: 733 $
+# $Date: 2008-09-23 18:04:22 +0200 (Tue, 23 Sep 2008) $
+# $Revision: 760 $
 
 #    Copyright (c) 2007-2008 Dominique Dumont.
 #
@@ -123,9 +123,9 @@
 				      },
 		      description => 'specifies the backend to store permanently configuration data.',
 		      help => {
-			       cds_file => "file with config data string. This is Config::Model own serialisation format, designed to be compact and readable.",
-			       ini_file => "Ini file format. Beware that the structure of your model must match the limitations of the INI file format, i.e only a 2 levels hierarchy",
-			       perl_file => "file with a perl data structure",
+			       cds_file => "file with config data string. This is Config::Model own serialisation format, designed to be compact and readable. Configuration filename is made with instance name",
+			       ini_file => "Ini file format. Beware that the structure of your model must match the limitations of the INI file format, i.e only a 2 levels hierarchy. Configuration filename is made with instance name",
+			       perl_file => "file with a perl data structure. Configuration filename is made with instance name",
 			       custom => "Custom format. You must specify your own class and method to perform the read or write function. See Config::Model::AutoRead doc for more details",
 			       augeas => "Experimental backend with RedHat's Augeas library. See http://augeas.net for details",
 			      }
@@ -160,10 +160,14 @@
 	   type => 'leaf',
 	   value_type => 'uniline' ,
 	   level => 'hidden',
-	   warp => { follow => '- backend',
-		     rules => [ augeas => { level => 'normal',}],
+	   warp => { follow => { b => '- backend' },
+		     rules => [ '$b eq "augeas"'
+				=> { level => 'normal',
+				     mandatory => 1,
+				   }
+			      ],
 		   },
-	   description => 'Specify the configuration file (with its absolute path) that will be used by Augeas',
+	   description => 'Specify the configuration file (with its absolute path) that will store configuration information',
 	   },
        'set_in'
        => {
@@ -178,6 +182,18 @@
 			      ],
 		   }
 	  },
+       'lens_with_seq'
+       => {
+	   type => 'list',
+	   level => 'hidden',
+	   cargo => { type => 'leaf',
+		      value_type => 'uniline' ,
+		    },
+	   warp => { follow => { b => '- backend' },
+		     rules => [ '$b eq "augeas"' => { level => 'normal',}],
+		   },
+	   description => 'List of Augeas lenses that contain a "seq" lens.',
+	   },
       ],
 
   ],
@@ -205,9 +221,13 @@
        => {
 	   type => 'leaf',
 	   value_type => 'uniline' ,
-	   level => 'normal',
-	   warp => { follow => '- backend',
-		     rules => [ augeas => { level => 'hidden',}],
+	   level => 'hidden',
+	   warp => { follow => { b => '- backend' },
+		     rules => [ 'defined $b and $b ne "augeas"' 
+				=> { level => 'normal',
+				     mandatory => 1,
+				   }
+			      ],
 		   },
 	   migrate_from => {
 			    formula => '$old' , 
@@ -240,13 +260,17 @@
        => {
 	   type => 'leaf',
 	   value_type => 'uniline' ,
-	   level => 'normal',
-	   warp => { follow => '- backend',
-		     rules => [ augeas => { level => 'hidden',}],
+	   level => 'hidden',
+	   warp => { follow => { b => '- backend' },
+		     rules => [ 'defined $b and $b ne "augeas"' 
+				=> { level => 'normal',
+				     mandatory => 1,
+				   }
+			      ],
 		   },
 	   migrate_from => {
 			    formula => '$old' , 
-			    variables => { old => '- - read_config_dir' } ,
+			    variables => { old => '- - write_config_dir' } ,
 			   }
 	  },
       ],

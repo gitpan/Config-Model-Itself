@@ -1,6 +1,6 @@
 ---
 name: Config-Model-Itself
-version: 0.205
+version: 0.206
 author:
   - Dominique Dumont (ddumont at cpan dot org)
 abstract: Graphical model editor for Config::Model
@@ -8,7 +8,7 @@ license: lgpl
 resources:
   license: http://opensource.org/licenses/lgpl-license.php
 requires:
-  Config::Model: 0.624
+  Config::Model: 0.627
   Config::Model::TkUI: 0.105
   Log::Log4perl: 0
 provides:
