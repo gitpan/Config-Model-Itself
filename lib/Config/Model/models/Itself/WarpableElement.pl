@@ -1,6 +1,6 @@
 # $Author: ddumont $
-# $Date: 2008-05-18 19:14:14 +0200 (Sun, 18 May 2008) $
-# $Revision: 673 $
+# $Date: 2008-10-13 16:40:22 +0200 (Mon, 13 Oct 2008) $
+# $Revision: 775 $
 
 #    Copyright (c) 2007-2008 Dominique Dumont.
 #
@@ -49,7 +49,7 @@
 	    value_type => 'boolean' ,
 	    warp => {  follow => { 't' => '?type' },
 		       'rules'
-		       => [ '$t eq "hash"'
+		       => [ '$t eq "hash" or $t eq "check_list"'
 			    => {
 				level => 'normal',
 			       }

@@ -1,6 +1,6 @@
 # $Author: ddumont $
-# $Date: 2008-05-01 16:41:22 +0200 (Thu, 01 May 2008) $
-# $Revision: 641 $
+# $Date: 2008-10-14 16:28:20 +0200 (Tue, 14 Oct 2008) $
+# $Revision: 777 $
 
 #    Copyright (c) 2007-2008 Dominique Dumont.
 #
@@ -34,7 +34,7 @@ use File::Basename ;
 
 use vars qw($VERSION) ;
 
-$VERSION = sprintf "1.%04d", q$Revision: 641 $ =~ /(\d+)/;
+$VERSION = '1.207';
 
 my $logger = Log::Log4perl::get_logger(__PACKAGE__);
 
