@@ -1,8 +1,8 @@
 # $Author: ddumont $
-# $Date: 2008-10-14 16:28:20 +0200 (Tue, 14 Oct 2008) $
-# $Revision: 777 $
+# $Date: 2009-01-09 14:02:06 +0100 (Fri, 09 Jan 2009) $
+# $Revision: 831 $
 
-#    Copyright (c) 2007-2008 Dominique Dumont.
+#    Copyright (c) 2007-2009 Dominique Dumont.
 #
 #    This file is part of Config-Model-Itself.
 #
@@ -34,7 +34,7 @@ use File::Basename ;
 
 use vars qw($VERSION) ;
 
-$VERSION = '1.207';
+$VERSION = '1.208';
 
 my $logger = Log::Log4perl::get_logger(__PACKAGE__);
 
@@ -405,6 +405,15 @@ __END__
 =head1 AUTHOR
 
 Dominique Dumont, (ddumont at cpan dot org)
+
+=head1 COPYRIGHT
+
+Copyright (C) 2007-2009 by Dominique Dumont
+
+=head1 LICENSE
+
+This library is free software; you can redistribute it and/or modify
+it under the LGPL terms.
 
 =head1 SEE ALSO
 
