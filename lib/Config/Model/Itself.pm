@@ -1,6 +1,6 @@
 # $Author: ddumont $
-# $Date: 2009-01-09 14:02:06 +0100 (Fri, 09 Jan 2009) $
-# $Revision: 831 $
+# $Date: 2009-03-10 12:57:46 +0100 (Tue, 10 Mar 2009) $
+# $Revision: 877 $
 
 #    Copyright (c) 2007-2009 Dominique Dumont.
 #
@@ -34,7 +34,7 @@ use File::Basename ;
 
 use vars qw($VERSION) ;
 
-$VERSION = '1.208';
+$VERSION = '1.209';
 
 my $logger = Log::Log4perl::get_logger(__PACKAGE__);
 
@@ -79,9 +79,7 @@ Config::Model::Itself - Model editor for Config::Model
 =head1 DESCRIPTION
 
 The Config::Itself and its model files provide a model of Config:Model
-(hence the Itself name). If you install also Config::Model::TkUI, you
-get a graphical configuration model editor. In others words, you get a
-GUI to edit configuration models like Xorg model.
+(hence the Itself name).
 
 Let's step back a little to explain. Any configuration data is, in
 essence, structured data. This data could be stored in an XML file. A
