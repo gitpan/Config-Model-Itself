@@ -5,7 +5,7 @@
 # $Revision: 1.5 $
 
 use ExtUtils::testlib;
-use Test::More tests => 18;
+use Test::More ;
 use Config::Model;
 use Log::Log4perl qw(:easy) ;
 use Data::Dumper ;
@@ -24,7 +24,7 @@ my $trace = $arg =~ /t/ ? 1 : 0 ;
 $::verbose          = 1 if $arg =~ /v/;
 $::debug            = 1 if $arg =~ /d/;
 
-Log::Log4perl->easy_init($arg =~ /l/ ? $DEBUG: $WARN);
+Log::Log4perl->easy_init($arg =~ /l/ ? $DEBUG: $ERROR);
 
 my $wr_test = 'wr_test' ;
 my $wr_conf1 = "$wr_test/wr_conf1";
@@ -42,7 +42,17 @@ if (not  eval {require Config::Model::Backend::Augeas; } ) {
     # do not use Test::Warnings with this
     $SIG{__WARN__} = sub { warn $_[0] unless $_[0] =~ /unknown backend/};
 }
+else {
+    # workaround Augeas locale bug
+    no warnings qw/uninitialized/;
+    if ($ENV{LC_ALL} ne 'C' or $ENV{LANG} ne 'C') {
+	$ENV{LC_ALL} = $ENV{LANG} = 'C';
+	my $inc = join(' ',map("-I$_",@INC)) ;
+	exec("$^X $inc $0 @ARGV");
+    }
+}
 
+plan tests => 18 ; # avoid double print of plan when exec is run
 
 my $meta_model = Config::Model -> new ( ) ;# model_dir => '.' );
 
@@ -60,7 +70,7 @@ copy('augeas_box/etc/ssh/sshd_config', "$wr_conf1/etc/ssh/") ;
 my $wanted = sub { 
     return if /svn|data$|~$/ ;
     s!data/!! ;
-    -d $File::Find::name && mkpath( "$wr_model1/$_", {mode => 0755}) ;
+    -d $File::Find::name && mkpath( ["$wr_model1/$_"], 0, 0755) ;
     -f $File::Find::name && copy($File::Find::name,"$wr_model1/$_") ;
 };
 find ({ wanted =>$wanted, no_chdir=>1} ,'data') ;
@@ -143,6 +153,13 @@ my $expected_map
      'MasterModel/SshdWithAugeas.pl' => [
 					 'MasterModel::SshdWithAugeas',
 					],
+     'MasterModel/References.pl' => [
+				     'MasterModel::References::Host',
+				     'MasterModel::References::If',
+				     'MasterModel::References::Lan',
+				     'MasterModel::References::Node',
+				     'MasterModel::References'
+				    ],
     };
 
 is_deeply($expected_map, $map, "Check file class map") ;

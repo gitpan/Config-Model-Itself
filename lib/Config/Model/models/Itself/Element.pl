@@ -1,6 +1,6 @@
 # $Author: ddumont $
-# $Date: 2008-05-01 16:41:22 +0200 (Thu, 01 May 2008) $
-# $Revision: 641 $
+# $Date: 2009-04-03 17:50:41 +0200 (Fri, 03 Apr 2009) $
+# $Revision: 916 $
 
 #    Copyright (c) 2007-2008 Dominique Dumont.
 #
@@ -66,11 +66,18 @@
 	   description => 'Used to highlight important parameter or to hide others. Hidden parameter are mostly used to hide features that are unavailable at start time. They can be made available later using warp mechanism',
 	  },
 
+      'summary' 
+      => {
+	  type => 'leaf',
+	  value_type => 'uniline', 
+	  description => 'enter short information regarding this element',
+	 },
+
       'description' 
       => {
 	  type => 'leaf',
 	  value_type => 'string', 
-	  description => 'enter help information regarding this element',
+	  description => 'enter detailed help information regarding this element',
 	 },
 
       # all but warped_node
@@ -111,6 +118,22 @@
 		  description => "Each key of a hash is a boolean expression using variables declared in the 'follow' parameters. The value of the hash specifies the effects on the node",
 		 },
       # hash or list
+      'index_type' 
+      => { type => 'leaf',
+	   value_type => 'enum',
+	   level      => 'hidden' ,
+	   warp => { follow => '?type',
+		     'rules'
+		     => { 'hash' => {
+				     level => 'important',
+				     mandatory => 1,
+				     choice => [qw/string integer/] ,
+				    }
+			}
+		   },
+	   description => 'Specify the type of allowed index for the hash. "String" means no restriction.',
+	 },
+
       'cargo' 
       => { type => 'warped_node',
 	   level => 'hidden',
@@ -123,6 +146,7 @@
 		      ],
 	   description => 'Specify the properties of the configuration element configuration in this hash or list',
 	 },
+
      ],
  ],
 ];

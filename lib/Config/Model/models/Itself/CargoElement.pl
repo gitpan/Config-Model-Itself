@@ -1,6 +1,6 @@
 # $Author: ddumont $
-# $Date: 2008-04-16 17:58:48 +0200 (Wed, 16 Apr 2008) $
-# $Revision: 612 $
+# $Date: 2009-04-03 17:50:41 +0200 (Fri, 03 Apr 2009) $
+# $Revision: 916 $
 
 #    Copyright (c) 2007-2008 Dominique Dumont.
 #
@@ -47,7 +47,7 @@
 	    follow => { elt_type => '- type' } ,
 
 	    rules  => [
-		       '$elt_type ne "node"' =>
+		       '$elt_type ne "warped_node"' =>
 		       {
 			level => 'normal',
 			config_class_name => 'Itself::CargoWarpValue',

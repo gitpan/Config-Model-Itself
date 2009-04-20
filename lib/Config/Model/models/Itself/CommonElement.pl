@@ -80,8 +80,10 @@
 				 vt => '?value_type',
 			       },
 		     'rules'
-		     => [ '  ($t eq "leaf" and $vt eq "enum" )
-                            or $t eq "check_list"' 
+		     => [ '  ($t eq "leaf" and (   $vt eq "enum" 
+                                                or $vt eq "reference")
+                             )
+                           or $t eq "check_list"' 
 			  => {
 			      level => 'normal',
 			     } ,
@@ -201,22 +203,6 @@
 	 },
 
       # hash element
-
-      'index_type' 
-      => { type => 'leaf',
-	   value_type => 'enum',
-	   level      => 'hidden' ,
-	   warp => { follow => '?type',
-		     'rules'
-		     => { 'hash' => {
-				     level => 'important',
-				     #mandatory => 1,
-				     choice => [qw/string integer/] ,
-				    }
-			}
-		   },
-	   description => 'Specify the type of allowed index for the hash. "String" means no restriction.',
-	 },
 
       # list element
 

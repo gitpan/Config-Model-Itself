@@ -1,3 +1,36 @@
+2009-04-20  Dominique Dumont  <dominique.dumont@hp.com> v1.210
+
+	* config-model-edit: Fixed Log::Log4perl default configuration
+
+2009-04-12  Dominique Dumont  <domi.dumont@free.fr>
+
+	* lib/Config/Model/models/Itself/Class.pl: Added auto_create and
+	file parameter to read/write spec (Req by Config::Model
+	0.635). Parameter allow_empty is deprecated and will be replaced
+	by auto_create when you run config-edit-model
+
+2009-04-03  Dominique Dumont  <dominique.dumont@hp.com> 
+
+	* config-model-edit: new -dot_diagram option to get a dot file to
+	reprensent the structure of the configuration model
+
+	* lib/Config/Model/Iself.pm (get_dot_diagram): New method to draw a
+	diagram of the configuration class with "include" and
+	usage (e.g. with "config_class_name" parameter).
+
+	* lib/Config/Model/models/Itself/Element.pl: index_type is now
+	mandatory for hash types
+
+2009-03-30  Dominique Dumont  <dominique.dumont@hp.com>
+
+	* lib/Config/Model/models/Itself/Element.pl: Added summary model
+	parameter (Config::Model 0.635)
+
+2009-03-12  Dominique Dumont  <dominique.dumont@hp.com>
+
+	* lib/Config/Model/models/Itself/CommonElement.pl: 'choice' is
+	also available for 'reference' values
+
 2009-03-10  Dominique Dumont  <dominique.dumont@hp.com>  v1.209
 
 	* t/*.t: Backported mkpath calls to File::Path delivered by perl
