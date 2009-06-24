@@ -1,6 +1,6 @@
 # $Author: ddumont $
-# $Date: 2009-04-12 19:43:01 +0200 (Sun, 12 Apr 2009) $
-# $Revision: 928 $
+# $Date: 2009-06-23 13:41:22 +0200 (mar 23 jun 2009) $
+# $Revision: 979 $
 
 #    Copyright (c) 2007-2008 Dominique Dumont.
 #
@@ -138,6 +138,9 @@
 	   level => 'normal',
 	   summary =>  'target configuration file name',
 	   description => 'specify the configuration file name. This parameter may not be applicable depending on your application. It may also be hardcoded in a custom backend. If not specified, the instance name will be used as base name for your configuration file.', 
+	   migrate_from => { variables => { old => '- config_file'},
+			     formula  => '$old',
+			   }
 	  },
 
        'class'
@@ -168,14 +171,8 @@
        => {
 	   type => 'leaf',
 	   value_type => 'uniline' ,
-	   level => 'hidden',
-	   warp => { follow => { b => '- backend' },
-		     rules => [ '$b eq "augeas" or $b eq "ini_file"'
-				=> { level => 'normal',
-				     mandatory => 1,
-				   }
-			      ],
-		   },
+	   status => 'deprecated',
+	   level => 'normal',
 	   description => 'Specify the configuration file (without path) that will store configuration information',
 	   },
        'set_in'
@@ -220,7 +217,7 @@
 	   level => 'hidden',
 	   warp => { follow => '- backend',
 		     rules => [ custom => { level => 'normal',
-					    built_in => 'read',
+					    upstream_default => 'read',
 					  }
 			      ],
 		   }
@@ -243,7 +240,7 @@
 	   type => 'leaf',
 	   value_type => 'boolean' ,
 	   level => 'normal',
-	   built_in => 0,
+	   upstream_default => 0,
 	   summary => 'Creates configuration files as needed',
 	   migrate_from => { formula => '$old' ,
 			     variables => { old => '- allow_empty' } ,
@@ -256,7 +253,7 @@
 	   value_type => 'boolean' ,
 	   level => 'normal',
 	   status => 'deprecated',
-	   built_in => 0,
+	   upstream_default => 0,
 	   summary => 'deprecated in favor of auto_create',
 	  },
 
@@ -276,7 +273,7 @@
 	   level => 'hidden',
 	   warp => { follow => '- backend',
 		     rules => [ custom => { level => 'normal',
-					    built_in => 'write',
+					    upstream_default => 'write',
 					  }
 			      ],
 		   }
@@ -299,7 +296,7 @@
 	   type => 'leaf',
 	   value_type => 'boolean' ,
 	   level => 'normal',
-	   built_in => 0,
+	   upstream_default => 0,
 	   summary => 'Creates configuration files as needed',
 	  },
 

@@ -1,6 +1,6 @@
 # $Author: ddumont $
-# $Date: 2009-04-03 17:50:41 +0200 (Fri, 03 Apr 2009) $
-# $Revision: 916 $
+# $Date: 2009-06-23 13:41:22 +0200 (mar 23 jun 2009) $
+# $Revision: 979 $
 
 #    Copyright (c) 2007-2008 Dominique Dumont.
 #
@@ -45,7 +45,7 @@
 	  type => 'leaf',
 	  value_type => 'enum', 
 	  choice => [qw/obsolete deprecated standard/],
-	  built_in => 'standard' ,
+	  upstream_default => 'standard' ,
 	 },
 
        'experience' 
@@ -53,7 +53,7 @@
 	   type => 'leaf',
 	   value_type => 'enum', 
 	   choice => [qw/master advanced beginner/] ,
-	   built_in => 'beginner',
+	   upstream_default => 'beginner',
 	   description => 'Used to categorize configuration elements in several "required skills". Use this feature if you need to hide a parameter to novice users',
 	  },
 
@@ -62,7 +62,7 @@
 	   type => 'leaf',
 	   value_type => 'enum', 
 	   choice => [qw/important normal hidden/] ,
-	   built_in => 'normal',
+	   upstream_default => 'normal',
 	   description => 'Used to highlight important parameter or to hide others. Hidden parameter are mostly used to hide features that are unavailable at start time. They can be made available later using warp mechanism',
 	  },
 

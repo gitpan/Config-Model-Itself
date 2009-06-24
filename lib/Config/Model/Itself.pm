@@ -1,6 +1,6 @@
 # $Author: ddumont $
-# $Date: 2009-04-06 13:57:55 +0200 (Mon, 06 Apr 2009) $
-# $Revision: 919 $
+# $Date: 2009-05-30 17:54:42 +0200 (sam 30 mai 2009) $
+# $Revision: 970 $
 
 #    Copyright (c) 2007-2009 Dominique Dumont.
 #
@@ -34,7 +34,7 @@ use File::Basename ;
 
 use vars qw($VERSION) ;
 
-$VERSION = '1.210';
+$VERSION = '1.211';
 
 my $logger = Log::Log4perl::get_logger(__PACKAGE__);
 

@@ -1,6 +1,6 @@
 # $Author: ddumont $
-# $Date: 2008-07-25 14:49:17 +0200 (Fri, 25 Jul 2008) $
-# $Revision: 732 $
+# $Date: 2009-06-23 13:41:22 +0200 (mar 23 jun 2009) $
+# $Revision: 979 $
 
 #    Copyright (c) 2007-2008 Dominique Dumont.
 #
@@ -32,7 +32,7 @@
        => { type => 'leaf',
 
 	    value_type => 'boolean',
-	    built_in   => 0,
+	    upstream_default   => 0,
 	    level => 'normal',
 	    description => "Allow user to override computed value (ignored if no computation is used for this variable).",
 	 },
