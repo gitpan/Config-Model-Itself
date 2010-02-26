@@ -1,5 +1,5 @@
 # $Author: ddumont $
-# $Date: 2008-04-15 14:14:43 +0200 (mar, 15 avr 2008) $
+# $Date: 2008-04-15 14:14:43 +0200 (Tue, 15 Apr 2008) $
 # $Revision: 609 $
 
 #    Copyright (c) 2007-2008 Dominique Dumont.

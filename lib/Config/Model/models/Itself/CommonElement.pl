@@ -2,7 +2,7 @@
 # $Date: 2008-04-11 18:20:21 +0200 (ven, 11 avr 2008) $
 # $Revision: 600 $
 
-#    Copyright (c) 2007-2008 Dominique Dumont.
+#    Copyright (c) 2007-2010 Dominique Dumont.
 #
 #    This file is part of Config-Model-Itself.
 #
@@ -92,25 +92,72 @@
 	   cargo => { type => 'leaf', value_type => 'uniline'},
 	 },
 
-      [qw/min max/]
+      'min'
       => { type => 'leaf',
 	   value_type => 'integer',
 	   level => 'hidden',
+	   description => 'minimum value',
 	   warp => { follow => {
 				'type'  => '?type',
 				'vtype' => '?value_type' ,
 			       },
 		     'rules'
-		     => [ '$type eq "hash"
-                            or
-                            (    $type eq "leaf" 
-                             and (    $vtype eq "integer" 
-                                   or $vtype eq "number" 
-                                 )
-                            ) '
+		     => [ '    $type eq "leaf" 
+                           and (    $vtype eq "integer" 
+                                 or $vtype eq "number" 
+                               )
+                          '
 			  => {
 			      level => 'normal',
 			     }
+			]
+		   }
+	 },
+
+      'max'
+      => { type => 'leaf',
+	   value_type => 'integer',
+	   level => 'hidden',
+	   description => 'maximum value',
+	   warp => { follow => {
+				'type'  => '?type',
+				'vtype' => '?value_type' ,
+			       },
+		     'rules'
+		     => [ '    $type eq "leaf" 
+                           and (    $vtype eq "integer" 
+                                 or $vtype eq "number" 
+                               )
+                          '
+			  => {
+			      level => 'normal',
+			     }
+			]
+		   }
+	 },
+
+      'min_index'
+      => { type => 'leaf',
+	   value_type => 'integer',
+	   level => 'hidden',
+	   description => 'minimum number of indexes',
+	   warp => { follow => {'type'  => '?type',},
+		     'rules'
+		     => [ '$type eq "hash" or $type eq "list"'
+			  => {level => 'normal',},
+			]
+		   }
+	 },
+
+      'max_index'
+      => { type => 'leaf',
+	   value_type => 'integer',
+	   level => 'hidden',
+	   description => 'maximum number of keys',
+	   warp => { follow => {'type'  => '?type',},
+		     'rules'
+		     => [ '$type eq "hash" or $type eq "list"'
+			  => {level => 'normal',},
 			]
 		   }
 	 },

@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-#    Copyright (c) 2007-2009 Dominique Dumont.
+#    Copyright (c) 2007-2010 Dominique Dumont.
 #
 #    This file is part of Config-Model-Itself.
 #
@@ -34,7 +34,7 @@ use Config::Model::Itself::TkEditUI ;
 # lame tracing that will be replaced by Log4perl
 use vars qw/$verbose $debug $VERSION/ ;
 
-$VERSION = sprintf "1.%04d", q$Revision: 970 $ =~ /(\d+)/;
+$VERSION = sprintf "1.%04d", q$Revision: 1094 $ =~ /(\d+)/;
 
 $verbose = 0;
 $debug = 0;
@@ -69,7 +69,7 @@ config-model-edit -  Graphical model editor for Config::Model
 
 =head1 SYNOPSIS
 
-  config-model-edit [options] -model Xorg
+  config-model-edit [options] -model Sshd [ class:Sshd element:Foo ... ]
 
 =head1 DESCRIPTION
 
@@ -118,14 +118,8 @@ C<Xorg::Screen> (file C<Xorg/Screen.pl>).
 
 =item -model
 
-Mandatory option that specifies the configuration data to be
-edited. By default, installed models will be edited. If you are
-running E.g. this command:
-
-  config-edit -model Fstab
-
-will look for C</etc/config-model.d/Fstab.pl> model file. See
-L<Config::Model> for more details.
+Mandatory option that specifies the configuration model to be
+edited.
 
 =item -verbose
 
@@ -150,6 +144,34 @@ model. C<include> are represented by solid lines. Class usage
 (i.e. C<config_class_name> parameter) is represented by dashed
 lines. The name of the element is attached to the dashed line.
 
+=item -dump [ file ]
+
+Dump configuration content on STDOUT or in the specified with
+Config::Model syntax.
+
+By default, dump only custom values, i.e. different from application
+built-in values or model default values. See -dumptype option for
+other types of dump
+
+=item -dumptype [ full | preset | custom ]
+
+Choose to dump every values (full), only preset values or only
+customized values (default)
+
+=item -load <cds_file_to_load> | -
+
+Load model from cds file (using Config::Model serialisation format,
+typically done with -dump option). This option can be used with
+C<-save> to directly save a model loaded from the cds file or from
+STDIN.
+
+=item -load_yaml <yaml_file_to_load> | -
+
+Load configuration data in model from cds file (using Config::Model
+serialisation format, typically done with -dump_yaml option). This
+option can be used with C<-save> to directly save a model loaded from
+the YAML file or from STDIN.
+
 =item -save
 
 Force a save of the model even if no edition was done. This option is
@@ -160,12 +182,33 @@ useful to migrate a model when Config::Model model feature changes.
 
 =cut
 
+sub load_data {
+    my $load_file = shift ;
+
+    my @data ;
+    if ( $load_file eq '-' ) {
+	@data = <STDIN> ;
+    }
+    else {
+	open(LOAD,$load_file) || die "cannot open load file $load_file:$!";
+	@data = <LOAD> ;
+	close LOAD; 
+    }
+
+    return wantarray ? @data : join('',@data);
+}
+
 my $man = 0;
 my $help = 0;
 my $force_load = 0;
 my $model_dir ;
 my $do_dot = 0;
+my $do_dump;
+my $dumptype;
+my $do_yaml = 0;
+my $load_yaml ;
 my $save = 0;
+my $load ;
 
 my $result = GetOptions (
 			 "dir=s"            => \$model_dir,
@@ -178,6 +221,11 @@ my $result = GetOptions (
 			 "force_load!"      => \$force_load,
 			 "save!"            => \$save,
 			 "dot_diagram!"     => \$do_dot ,
+			 "dump!"            => \$do_dump ,
+                         "dumptype:s"       => \$dumptype,
+                         "load=s"           => \$load,
+                         "load_yaml=s"      => \$load_yaml,
+			 "dump_yaml!"       => \$do_yaml ,
 			);
 
 pod2usage(2) if not $result ;
@@ -223,8 +271,45 @@ $rw_obj -> read_all( model_dir  => $read_model_dir,
 		     legacy =>'ignore',
 		   ) ;
 
+if (defined $load) {
+    my $data = load_data($load) ;
+    $meta_root->load($data);
+}
+
+if (defined $load_yaml) {
+    my $yaml = load_data($load_yaml) ;
+    require YAML::Tiny;
+    import YAML::Tiny qw/Load/;
+    my $pdata = Load($yaml) ;
+    $meta_root->load_data($pdata) ;
+}
+
+if (@ARGV) {
+    $meta_root->load("@ARGV") ;
+}
+
 if ($do_dot) {
     print $rw_obj->get_dot_diagram ;
+    exit ;
+}
+
+if (defined $do_dump) {
+    my $dump_string = $meta_root->dump_tree( mode => $dumptype || 'custom' ) ;
+    if ($do_dump) {
+	open(DUMP,">$do_dump") or die "cannot dump in $do_dump:$!";
+	print DUMP $dump_string ;
+	close DUMP;
+    }
+    else {
+	print $dump_string ;
+    }
+    exit ;
+}
+
+if ($do_yaml) {
+    require YAML::Tiny;
+    import YAML::Tiny qw/Dump/;
+    print Dump($meta_root->dump_as_data(ordered_hash_as_list => 0)) ;
     exit ;
 }
 
@@ -240,6 +325,8 @@ if ($save) {
 
 my $mw = MainWindow-> new ;
 $mw->withdraw ;
+# Thanks to Jerome Quelin for the tip
+$mw->optionAdd('*BorderWidth' => 1);
 
 my $cmu = $mw->ConfigModelEditUI (-root      => $meta_root,
 				  -store_sub => $write_sub,
@@ -250,13 +337,42 @@ my $cmu = $mw->ConfigModelEditUI (-root      => $meta_root,
 
 &MainLoop ; # Tk's
 
+=head1 LOGGING
+
+All Config::Model logging is (slowly) moved from klunky debug and
+verbose prints to L<Log::Log4perl>. Logging can be configured in the
+following files:
+
+=over
+
+=item *
+
+ ~/.log4config-model
+
+=item * 
+
+ /etc/log4config-model.conf
+
+=back
+
+Without these files, the following Log4perl config is used:
+
+ log4perl.logger=WARN, Screen
+ log4perl.appender.Screen        = Log::Log4perl::Appender::Screen
+ log4perl.appender.Screen.stderr = 0
+ log4perl.appender.Screen.layout = Log::Log4perl::Layout::PatternLayout
+ log4perl.appender.Screen.layout.ConversionPattern = %d %m %n
+
+Log4Perl categories are shown in L<config-edit/LOGGING>
+
 =head1 AUTHOR
 
 Dominique Dumont, ddumont at cpan dot org
 
 =head1 SEE ALSO
 
-L<Config::Model::Model>, 
+L<Config::Model>, 
+L<Config::Model::Node>, 
 L<Config::Model::Instance>, 
 L<Config::Model::HashId>,
 L<Config::Model::ListId>,
