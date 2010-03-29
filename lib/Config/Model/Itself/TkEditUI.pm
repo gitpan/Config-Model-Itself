@@ -1,8 +1,4 @@
-# $Author: ddumont $
-# $Date: 2008-04-17 15:38:28 +0200 (Thu, 17 Apr 2008) $
-# $Revision: 615 $
-
-#    Copyright (c) 2008 Dominique Dumont.
+#    Copyright (c) 2008,2010 Dominique Dumont.
 #
 #    This file is part of Config-Model-Itself.
 #
@@ -27,9 +23,8 @@ use warnings ;
 use Carp ;
 
 use base qw/Config::Model::TkUI/;
-use vars qw/$VERSION/ ;
 
-$VERSION = sprintf "1.%04d", q$Revision: 615 $ =~ /(\d+)/;
+our $VERSION="1.212";
 
 Construct Tk::Widget 'ConfigModelEditUI';
 
@@ -58,7 +53,8 @@ sub Populate {
     my $items = [[ qw/command test -command/, sub{ $cw->test_model }],
 		] ;
 
-    my $model_menu = $cw->{my_menu}->cascade(-label => 'Model', -menuitems => $items) ;
+    my $model_menu = $cw->{my_menu}->cascade(-label => 'Model',
+					     -menuitems => $items) ;
     $cw->{read_model_dir} = $r_model_dir ;
     $cw->{write_model_dir} = $w_model_dir ;
     $cw->{model_name} = $model_name ;

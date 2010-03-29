@@ -1,8 +1,4 @@
-# $Author: ddumont $
-# $Date: 2009-06-23 13:41:22 +0200 (Tue, 23 Jun 2009) $
-# $Revision: 979 $
-
-#    Copyright (c) 2007-2008 Dominique Dumont.
+#    Copyright (c) 2007-2010 Dominique Dumont.
 #
 #    This file is part of Config-Model-Itself.
 #
@@ -111,6 +107,7 @@
 		    },
 
        'backend' => { type => 'leaf',
+		      class => 'Config::Model::Itself::BackendDetector' ,
 		      value_type => 'enum',
 		      choice => [qw/cds_file perl_file ini_file augeas custom/],
 		      migrate_from => { formula => '$old' , 

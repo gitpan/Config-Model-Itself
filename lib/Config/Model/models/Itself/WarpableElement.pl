@@ -1,6 +1,6 @@
-# $Author: ddumont $
-# $Date: 2009-06-23 13:41:22 +0200 (Tue, 23 Jun 2009) $
-# $Revision: 979 $
+# $Author$
+# $Date$
+# $Revision$
 
 #    Copyright (c) 2007-2008 Dominique Dumont.
 #

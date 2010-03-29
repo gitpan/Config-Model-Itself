@@ -1,12 +1,8 @@
-# $Author: ddumont $
-# $Date: 2010-02-25 13:32:26 +0100 (Thu, 25 Feb 2010) $
-# $Revision: 1094 $
-
 #    Copyright (c) 2007-2010 Dominique Dumont.
 #
 #    This file is part of Config-Model-Itself.
 #
-#    Config-Xorg is free software; you can redistribute it and/or
+#    Config-Model-Itself is free software; you can redistribute it and/or
 #    modify it under the terms of the GNU Lesser Public License as
 #    published by the Free Software Foundation; either version 2.1 of
 #    the License, or (at your option) any later version.
@@ -32,9 +28,7 @@ use File::Find ;
 use File::Path ;
 use File::Basename ;
 
-use vars qw($VERSION) ;
-
-$VERSION = '1.212';
+our $VERSION = '1.213';
 
 my $logger = Log::Log4perl::get_logger(__PACKAGE__);
 
@@ -78,7 +72,7 @@ Config::Model::Itself - Model editor for Config::Model
 
 =head1 DESCRIPTION
 
-The Config::Itself and its model files provide a model of Config:Model
+Config::Itself module and its model files provide a model of Config:Model
 (hence the Itself name).
 
 Let's step back a little to explain. Any configuration data is, in

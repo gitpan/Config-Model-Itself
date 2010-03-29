@@ -27,14 +27,13 @@ use Getopt::Long ;
 use Pod::Usage ;
 use Log::Log4perl ;
 use Config::Model::Itself ;
+use YAML::Any;
 use Tk ;
 use Config::Model::TkUI ;
 use Config::Model::Itself::TkEditUI ;
 
 # lame tracing that will be replaced by Log4perl
-use vars qw/$verbose $debug $VERSION/ ;
-
-$VERSION = sprintf "1.%04d", q$Revision: 1094 $ =~ /(\d+)/;
+use vars qw/$verbose $debug/ ;
 
 $verbose = 0;
 $debug = 0;
@@ -133,7 +132,7 @@ Provide debug infos.
 
 Provides a full stack trace when exiting on error.
 
-=item -force-load
+=item -force_load
 
 Load file even if error are found in data. Bad data are discarded
 
@@ -271,6 +270,8 @@ $rw_obj -> read_all( model_dir  => $read_model_dir,
 		     legacy =>'ignore',
 		   ) ;
 
+$meta_inst->push_no_value_check(qw/store type/) if $force_load ;
+
 if (defined $load) {
     my $data = load_data($load) ;
     $meta_root->load($data);
@@ -278,8 +279,6 @@ if (defined $load) {
 
 if (defined $load_yaml) {
     my $yaml = load_data($load_yaml) ;
-    require YAML::Tiny;
-    import YAML::Tiny qw/Load/;
     my $pdata = Load($yaml) ;
     $meta_root->load_data($pdata) ;
 }
@@ -287,6 +286,9 @@ if (defined $load_yaml) {
 if (@ARGV) {
     $meta_root->load("@ARGV") ;
 }
+
+$meta_inst->pop_no_value_check() if $force_load ;
+
 
 if ($do_dot) {
     print $rw_obj->get_dot_diagram ;
@@ -380,7 +382,4 @@ L<Config::Model::WarpedNode>,
 L<Config::Model::Value>
 
 =cut
-
-
-
 
