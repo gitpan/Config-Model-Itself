@@ -4,7 +4,7 @@ author:
   - 'Dominique Dumont (ddumont at cpan dot org)'
 configure_requires:
   Module::Build: 0.36
-generated_by: 'Module::Build version 0.3603'
+generated_by: 'Module::Build version 0.3607'
 license: lgpl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -13,7 +13,7 @@ name: Config-Model-Itself
 provides:
   Config::Model::Itself:
     file: lib/Config/Model/Itself.pm
-    version: 1.214
+    version: 1.215
   Config::Model::Itself::BackendDetector:
     file: lib/Config/Model/Itself/BackendDetector.pm
     version: 1.001
@@ -28,4 +28,4 @@ requires:
   YAML::Any: 0
 resources:
   license: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
-version: 1.214
+version: 1.215
