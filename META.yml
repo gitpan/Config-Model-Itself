@@ -1,31 +1,23 @@
 ---
-abstract: 'Graphical model editor for Config::Model'
+abstract: 'Model editor for Config::Model'
 author:
-  - 'Dominique Dumont (ddumont at cpan dot org)'
+  - 'Dominique Dumont'
+build_requires:
+  Module::Build: 0.3601
 configure_requires:
-  Module::Build: 0.36
-generated_by: 'Module::Build version 0.3607'
+  Module::Build: 0.3601
+dynamic_config: 0
+generated_by: 'Dist::Zilla version 4.101900, CPAN::Meta::Converter version 2.101670'
 license: lgpl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
 name: Config-Model-Itself
-provides:
-  Config::Model::Itself:
-    file: lib/Config/Model/Itself.pm
-    version: 1.215
-  Config::Model::Itself::BackendDetector:
-    file: lib/Config/Model/Itself/BackendDetector.pm
-    version: 1.001
-  Config::Model::Itself::TkEditUI:
-    file: lib/Config/Model/Itself/TkEditUI.pm
-    version: 1.212
 requires:
-  Config::Model: 1.001
+  Config::Model: 1.206
   Config::Model::TkUI: 1.210
   Log::Log4perl: 0
   Pod::POM: 0
+  Tk: 0
   YAML::Any: 0
-resources:
-  license: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
-version: 1.215
+version: 1.216

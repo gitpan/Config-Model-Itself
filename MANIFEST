@@ -1,6 +1,7 @@
 Build.PL
 ChangeLog
-MANIFEST			This list of files
+LICENSE
+MANIFEST
 META.yml
 README
 augeas_box/etc/ssh/sshd_config
@@ -8,10 +9,10 @@ config-model-edit
 data/MasterModel.pl
 data/MasterModel/CheckListExamples.pl
 data/MasterModel/HashIdOfValues.pl
+data/MasterModel/References.pl
+data/MasterModel/SshdWithAugeas.pl
 data/MasterModel/WarpedId.pl
 data/MasterModel/WarpedValues.pl
-data/MasterModel/SshdWithAugeas.pl
-data/MasterModel/References.pl
 data/MasterModel/X_base_class.pl
 lib/Config/Model/Itself.pm
 lib/Config/Model/Itself/BackendDetector.pm
@@ -33,8 +34,9 @@ lib/Config/Model/models/Itself/WarpableCargoElement.pl
 lib/Config/Model/models/Itself/WarpableElement.pl
 t/backend_detect.t
 t/dot_graph.t
-t/itself.t
 t/itself-editor.t
+t/itself.t
 t/list_itself_structure.t
 t/load_write_itself.t
 t/pod.t
+t/release-pod-syntax.t
