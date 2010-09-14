@@ -1,12 +1,12 @@
-#
+# 
 # This file is part of Config-Model-Itself
-#
+# 
 # This software is Copyright (c) 2010 by Dominique Dumont.
-#
+# 
 # This is free software, licensed under:
-#
+# 
 #   The GNU Lesser General Public License, Version 2.1, February 1999
-#
+# 
 #    Copyright (c) 2007-2008.2010 Dominique Dumont.
 #
 #    This file is part of Config-Model-Itself.
@@ -34,10 +34,11 @@
    'element' 
    => [
 
-      [qw/follow_keys_from allow_keys_from/] 
+      [qw/allow_keys_from allow_keys_matching follow_keys_from/] 
        => { type => 'leaf',
             level => 'hidden',
             value_type => 'uniline' ,
+	    experience => 'advanced',
             warp => {  follow => { 't' => '?type'},
                        'rules'
                        => [ '$t eq "hash"' 
@@ -67,6 +68,7 @@
        => { type => 'list',
             level => 'hidden',
             cargo => { type => 'leaf', value_type => 'string'} ,
+	    experience => 'advanced',
             warp => {  follow => { 't' => '?type' },
                        'rules'
                        => [ '$t eq "hash"'
@@ -81,6 +83,7 @@
        => { type => 'leaf',
             level => 'hidden',
             value_type => 'string' ,
+	    experience => 'advanced',
             warp => {  follow => { 't' => '?type' },
                        'rules'
                        => [ '$t eq "list"'
@@ -124,7 +127,26 @@
 
 
 
-       [qw/replace help/]
+       'replace'
+       => {
+           type => 'hash',
+           index_type => 'string',
+           level => 'hidden',
+	   experience => 'advanced',
+           warp => {  follow => { 't' => '?type' },
+                      'rules'
+                      => [ '$t eq "leaf" or $t eq "check_list"'
+                           => {
+                               level => 'normal',
+                              }
+                         ]
+                   },
+           # TBD this could be a reference if we restrict replace to
+           # enum value...
+           cargo => { type => 'leaf', value_type => 'string' } ,
+          },
+
+       help
        => {
            type => 'hash',
            index_type => 'string',
@@ -152,6 +174,7 @@
        auto_create_keys => 'always create a set of keys specified in this list',
        auto_create_ids  => 'always create the number of id specified in this integer',
        allow_keys => 'specify a set of allowed keys',
+       allow_keys_matching => 'Keys must match the specified regular expression.',
        default_with_init => 'specify a set of keys to create and initialization on some elements . E.g. \' foo => "X=Av Y=Bv", bar => "Y=Av Z=Cz"\' ',
        help => 'Specify help string specific to possible values. E.g for "light" value, you could write " red => \'stop\', green => \'walk\' ',
        replace => 'Used for enum to substitute one value with another. This parameter must be used to enable user to upgrade a configuration with obsolete values. The old value is the key of the hash, the new one is the value of the hash',

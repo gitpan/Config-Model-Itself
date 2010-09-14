@@ -1,12 +1,12 @@
-#
+# 
 # This file is part of Config-Model-Itself
-#
+# 
 # This software is Copyright (c) 2010 by Dominique Dumont.
-#
+# 
 # This is free software, licensed under:
-#
+# 
 #   The GNU Lesser General Public License, Version 2.1, February 1999
-#
+# 
 #    Copyright (c) 2007-2010 Dominique Dumont.
 #
 #    This file is part of Config-Model-Itself.
@@ -32,6 +32,7 @@ use Data::Dumper ;
 use warnings FATAL => qw(all) ;
 use strict ;
 
+my @version_info = @ARGV ? (dist_version => $ARGV[0]) : () ;
 
 my $build = Module::Build->new
   (
@@ -39,21 +40,9 @@ my $build = Module::Build->new
    license       => 'lgpl',
    dist_author   => "Dominique Dumont (ddumont at cpan dot org)",
    dist_abstract => "Graphical model editor for Config::Model",
+   @version_info,
 
-  'build_requires' => {
-    'Module::Build' => '0.3601'
-  },
-  'configure_requires' => {
-    'Module::Build' => '0.3601'
-  },
-  'requires' => {
-    'Config::Model' => '1.206',
-    'Config::Model::TkUI' => '1.210',
-    'Log::Log4perl' => '0',
-    'Pod::POM' => '0',
-    'Tk' => '0',
-    'YAML::Any' => '0'
-  },
+
 
    script_files  => [ 'config-model-edit' ],
    add_to_cleanup => [qw/wr_test/] ,

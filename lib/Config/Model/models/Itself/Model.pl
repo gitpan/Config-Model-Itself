@@ -1,12 +1,12 @@
-#
+# 
 # This file is part of Config-Model-Itself
-#
+# 
 # This software is Copyright (c) 2010 by Dominique Dumont.
-#
+# 
 # This is free software, licensed under:
-#
+# 
 #   The GNU Lesser General Public License, Version 2.1, February 1999
-#
+# 
 # $Author$
 # $Date$
 # $Name: not supported by cvs2svn $
@@ -40,6 +40,7 @@
        => {
 	   type => 'hash',
 	   index_type => 'string' , 
+	   ordered => 1,
 	   cargo => { type => 'node',
 		      config_class_name => 'Itself::Class' ,
 		    },

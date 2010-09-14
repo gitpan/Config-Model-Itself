@@ -1,12 +1,12 @@
-#
+# 
 # This file is part of Config-Model-Itself
-#
+# 
 # This software is Copyright (c) 2010 by Dominique Dumont.
-#
+# 
 # This is free software, licensed under:
-#
+# 
 #   The GNU Lesser General Public License, Version 2.1, February 1999
-#
+# 
 #    Copyright (c) 2007-2010 Dominique Dumont.
 #
 #    This file is part of Config-Model-Itself.
@@ -27,7 +27,7 @@
 
 package Config::Model::Itself ;
 BEGIN {
-  $Config::Model::Itself::VERSION = '1.216';
+  $Config::Model::Itself::VERSION = '1.217';
 }
 
 use strict;
@@ -158,13 +158,16 @@ sub read_all {
         croak __PACKAGE__," read_all: unknown config dir $dir";
     }
 
+    my $root_model_file = $model ;
+    $root_model_file =~ s!::!/!g ;
+    
     my @files ;
     my $wanted = sub { 
         my $n = $File::Find::name ;
         push @files, $n if (-f $_ and not /~$/ 
                             and $n !~ /CVS/
                             and $n !~ m!.svn!
-                            and $n =~ /\b$model/
+                            and $n =~ /\b$root_model_file/
                            ) ;
     } ;
     find ($wanted, $dir ) ;
@@ -234,7 +237,8 @@ sub read_all {
     $model_obj->instance->push_no_value_check(qw/store fetch type/) if $force_load;
 
     $logger->info("loading all extracted data in Config::Model::Itself");
-    $model_obj->load_data( {class => \%read_models} ) ;
+    # load with a array ref to avoid warnings about missing order
+    $model_obj->load_data( {class => [ %read_models ] } ) ;
 
     $model_obj->instance->pop_no_value_check() if $force_load;
 
@@ -439,7 +443,10 @@ sub get_dot_diagram {
             my $type = $elts->[$idx+1]{type} ;
 
             foreach my $elt_name (@elt_names) {
-                $elt_list .= "- $elt_name ($type)\\n";
+                my $of = '';
+                my $cargo = $elts->[$idx+1]{cargo}{type} ;
+                $of = " of $cargo" if defined $cargo ;
+                $elt_list .= "- $elt_name ($type$of)\\n";
                 $use .= $self->scan_used_class($d_class,$elt_name,
                                                $elts->[$idx+1]);
             }

@@ -1,12 +1,12 @@
-#
+# 
 # This file is part of Config-Model-Itself
-#
+# 
 # This software is Copyright (c) 2010 by Dominique Dumont.
-#
+# 
 # This is free software, licensed under:
-#
+# 
 #   The GNU Lesser General Public License, Version 2.1, February 1999
-#
+# 
 #    Copyright (c) 2010 Dominique Dumont.
 #
 #    This file is part of Config-Model-Itself.
@@ -26,15 +26,17 @@
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 
 package Config::Model::Itself::BackendDetector ;
+BEGIN {
+  $Config::Model::Itself::BackendDetector::VERSION = '1.217';
+}
 
 use Pod::POM ;
+use File::Find ;
 
 use base qw/Config::Model::Value/ ;
 
 use strict ;
 use warnings ;
-
-our $VERSION="1.001";
 
 sub setup_enum_choice {
     my $self = shift ;
@@ -45,16 +47,16 @@ sub setup_enum_choice {
     my $path = $INC{"Config/Model.pm"} ;
     $path =~ s!\.pm!/Backend! ;
 
-    if (-d $path) {
-	opendir(BACK,$path) || die "Can't opendir $path:$!" ;
-	foreach (readdir(BACK)) {
-	    next unless s/\.pm// ;
-	    next if /Any$/ ; # Virtual class
-	    s!/!::!g ;
-	    push @choices , $_ ;
-	}
-    }
-
+    my $wanted = sub { 
+        my $n = $File::Find::name ;
+        if (-f $_ and $n =~ s/\.pm$// and $n !~ /Any$/) {
+	    $n =~ s!.*Backend/!! ;
+	    $n =~ s!/!::!g ;
+	    push @choices , $n ;
+        }
+    } ;
+    find ($wanted, $path ) ;
+    
     $self->SUPER::setup_enum_choice(@choices) ;
 }
 
@@ -66,31 +68,33 @@ sub set_help {
     my $path = $INC{"Config/Model.pm"} ;
     $path =~ s!\.pm!/Backend! ;
 
-    if (-d $path) {
-	my $parser = Pod::POM->new();
+    my $parser = Pod::POM->new();
 
-	opendir(BACK,$path) || die "Can't opendir $path:$!" ;
-	foreach (readdir(BACK)) {
-	    next unless /\.pm$/ ;
-	    next if /Any$/ ; # Virtual class
-	    my ($backend) = ( /(\w+)\.pm/ ) ;
-	    my $file = "$path/$_" ;
-	    my ($backend_class) = ($file =~ m!(Config/Model/Backend/\w*)\.pm! ) ;
-	    $backend_class =~ s!/!::!g ;
+    my $wanted = sub { 
+        my $n = $File::Find::name ;
+	
+        return unless (-f $n and $n !~ /Any\.pm$/) ;
+        my $file = $n ;
+	$n =~ s/\.pm$//;
+	$n =~ s!/!::!g ;
+	my $perl_name = $n ;
+	$n =~ s!.*Backend::!! ;
+	$perl_name =~ s!.*Config!Config! ;
 
-	    my $pom = $parser->parse_file($file)|| die $parser->error();
+	my $pom = $parser->parse_file($file)|| die $parser->error();
 
-	    foreach my $head1 ($pom->head1()) {
-		if ($head1->title() eq 'NAME') {
-		    my $c = $head1->content();
-		    $c =~ s/.*?-\s*//;
-		    $c =~ s/\n//g;
-		    $help->{$backend} = $c . " provided by $backend_class";
-		    last ;
-		}
+	foreach my $head1 ($pom->head1()) {
+	    if ($head1->title() eq 'NAME') {
+		my $c = $head1->content();
+		$c =~ s/.*?-\s*//;
+		$c =~ s/\n//g;
+		$help->{$n} = $c . " provided by $perl_name"."::".$n;
+		last;
 	    }
 	}
-    }
+    };
+
+    find ($wanted, $path ) ;
 
     $self->{help} =  $help;
 }

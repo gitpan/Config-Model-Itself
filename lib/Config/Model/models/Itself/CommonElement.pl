@@ -1,12 +1,12 @@
-#
+# 
 # This file is part of Config-Model-Itself
-#
+# 
 # This software is Copyright (c) 2010 by Dominique Dumont.
-#
+# 
 # This is free software, licensed under:
-#
+# 
 #   The GNU Lesser General Public License, Version 2.1, February 1999
-#
+# 
 # $Author: ddumont $
 # $Date: 2008-04-11 18:20:21 +0200 (ven, 11 avr 2008) $
 # $Revision: 600 $
@@ -106,6 +106,7 @@
 	   value_type => 'integer',
 	   level => 'hidden',
 	   description => 'minimum value',
+	   experience => 'advanced',
 	   warp => { follow => {
 				'type'  => '?type',
 				'vtype' => '?value_type' ,
@@ -128,6 +129,7 @@
 	   value_type => 'integer',
 	   level => 'hidden',
 	   description => 'maximum value',
+	   experience => 'advanced',
 	   warp => { follow => {
 				'type'  => '?type',
 				'vtype' => '?value_type' ,
@@ -149,6 +151,7 @@
       => { type => 'leaf',
 	   value_type => 'integer',
 	   level => 'hidden',
+	   experience => 'advanced',
 	   description => 'minimum number of indexes',
 	   warp => { follow => {'type'  => '?type',},
 		     'rules'
@@ -162,6 +165,7 @@
       => { type => 'leaf',
 	   value_type => 'integer',
 	   level => 'hidden',
+	   experience => 'advanced',
 	   description => 'maximum number of keys',
 	   warp => { follow => {'type'  => '?type',},
 		     'rules'
@@ -205,6 +209,7 @@
       => { type => 'leaf',
 	   value_type => 'enum',
 	   level => 'hidden',
+	   experience => 'advanced',
 	   description => 'When stored, the value will be converted to uppercase (uc) or lowercase (lc).',
 	   warp => {  follow => { 't' => '?type'},
 		      'rules'
@@ -222,7 +227,30 @@
       => { type => 'leaf',
 	   value_type => 'uniline',
 	   level => 'hidden',
+	   experience => 'advanced',
 	   description => 'Perl regular expression to assert the validity of the value.',
+	   warp => {  follow => { 'type' => '?type',
+				  'vtype' => '?value_type' ,
+				},
+		      'rules'
+		      => [ '    $type eq "leaf" 
+                            and (    $vtype eq "uniline" 
+                                  or $vtype eq "string" 
+                                )
+                          '
+			  => {
+			      level => 'normal',
+			     }
+			 ]
+		   },
+	 },
+
+      'grammar'
+      => { type => 'leaf',
+	   value_type => 'string',
+	   level => 'hidden',
+	   experience => 'advanced',
+	   description => "Feed this grammar to Parse::RecDescent to perform validation",
 	   warp => {  follow => { 'type' => '?type',
 				  'vtype' => '?value_type' ,
 				},

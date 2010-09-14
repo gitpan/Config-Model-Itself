@@ -1,12 +1,12 @@
-#
+# 
 # This file is part of Config-Model-Itself
-#
+# 
 # This software is Copyright (c) 2010 by Dominique Dumont.
-#
+# 
 # This is free software, licensed under:
-#
+# 
 #   The GNU Lesser General Public License, Version 2.1, February 1999
-#
+# 
 #    Copyright (c) 2007-2010 Dominique Dumont.
 #
 #    This file is part of Config-Model-Itself.
@@ -85,7 +85,10 @@
 	  cargo => { type => 'leaf',
 		     value_type => 'uniline' 
 		   },
-	  description => "Specifies the path to the value elements that drive the change of this node. Each key of the has is a variable name used in the 'rules' parameter. The value of the hash is a path in the configuration tree",
+	  description => "Specifies the path to the value elements that drive the "
+			 ."change of this node. Each key of the has is a variable name used "
+			 ."in the 'rules' parameter. The value of the hash is a path in the "
+			 ."configuration tree",
 	 },
 
       'morph' => 
@@ -103,7 +106,9 @@
 		       },
 		  }
 	     },
-	  description => "When set, a recurse copy of the value from the old object to the new object will be attemped. When a copy is not possible, undef values will be assigned.",
+	  description => "When set, a recurse copy of the value from the old object "
+	       ."to the new object will be attemped. When a copy is not possible, "
+		    ."undef values will be assigned.",
 	 },
 
       # end warp elements for warped_node
@@ -114,6 +119,7 @@
       => { type => 'leaf',
 	   level      => 'hidden' ,
 	   value_type => 'uniline',
+	   experience => 'advanced',
 	   warp => { follow => { t  => '- type',
 				 vt => '- value_type',
 			       },
@@ -125,7 +131,10 @@
 			     },
 			]
 		   },
-	   description => "points to an array or hash element in the configuration tree using the path syntax. The available choice of this reference value (or check list)is made from the available keys of the pointed hash element or the values of the pointed array element.",
+	   description => "points to an array or hash element in the configuration "
+			 ."tree using the path syntax. The available choice of this "
+			 ."reference value (or check list)is made from the available "
+			 ."keys of the pointed hash element or the values of the pointed array element.",
 	 },
 
       'computed_refer_to' 
@@ -134,6 +143,7 @@
 		       vt => '- value_type',
 		     },
 	   level => 'hidden',
+	   experience => 'master',
 	   'rules'
 	   => [ '   $t  eq "check_list" 
                  or $vt eq "reference"  '
@@ -148,6 +158,7 @@
       'compute' 
       => { type => 'warped_node',
 	   level => 'hidden',
+	   experience => 'advanced',
 
 	   follow => { t  => '- type',},
 	   'rules' => [ '$t  eq "leaf"'
@@ -162,6 +173,7 @@
       'migrate_from' 
       => { type => 'warped_node',
 	   level => 'hidden',
+	   experience => 'advanced',
 
 	   follow => { t  => '- type',},
 	   'rules' => [ '$t  eq "leaf"'

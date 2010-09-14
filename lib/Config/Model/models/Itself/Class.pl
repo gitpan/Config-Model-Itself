@@ -1,12 +1,12 @@
-#
+# 
 # This file is part of Config-Model-Itself
-#
+# 
 # This software is Copyright (c) 2010 by Dominique Dumont.
-#
+# 
 # This is free software, licensed under:
-#
+# 
 #   The GNU Lesser General Public License, Version 2.1, February 1999
-#
+# 
 #    Copyright (c) 2007-2010 Dominique Dumont.
 #
 #    This file is part of Config-Model-Itself.
@@ -189,6 +189,17 @@
            level => 'normal',
            description => 'Specify the configuration file (without path) that will store configuration information',
            },
+       'comment_delimiter'
+       => {
+           type => 'leaf',
+           value_type => 'uniline' ,
+           level => 'hidden',
+           description => 'comment starts with this character',
+           upstream_default => '#',
+           warp => { follow => '- backend',
+                     rules => [ ini_file => { level => 'normal', } ],
+                   }
+          },
        'set_in'
        => {
            type => 'leaf',

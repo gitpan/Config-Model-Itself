@@ -1,13 +1,13 @@
 #!/usr/bin/perl
-#
+# 
 # This file is part of Config-Model-Itself
-#
+# 
 # This software is Copyright (c) 2010 by Dominique Dumont.
-#
+# 
 # This is free software, licensed under:
-#
+# 
 #   The GNU Lesser General Public License, Version 2.1, February 1999
-#
+# 
 
 #    Copyright (c) 2007-2010 Dominique Dumont.
 #
@@ -175,10 +175,13 @@ STDIN.
 
 =item -load_yaml <yaml_file_to_load> | -
 
-Load configuration data in model from cds file (using Config::Model
-serialisation format, typically done with -dump_yaml option). This
+Load configuration data in model from YAML file. This
 option can be used with C<-save> to directly save a model loaded from
 the YAML file or from STDIN.
+
+=item -dump_yaml 
+
+Dump a model in YAML format
 
 =item -save
 
@@ -272,7 +275,10 @@ my $rw_obj = Config::Model::Itself -> new(model_object => $meta_root ) ;
 
 my $read_model_dir = $model_dir || $dev_model_dir ;
 
-if (not -e $read_model_dir.'/'.$root_model.'.pl') {
+my $root_model_file = $root_model ;
+$root_model_file =~ s!::!/!g ;
+
+if (not -e $read_model_dir.'/'.$root_model_file.'.pl') {
     $read_model_dir =  $INC{'Config/Model.pm'} ;
     $read_model_dir =~ s/\.pm//;
     $read_model_dir .= '/models' ;

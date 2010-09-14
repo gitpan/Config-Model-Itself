@@ -1,12 +1,12 @@
-#
+# 
 # This file is part of Config-Model-Itself
-#
+# 
 # This software is Copyright (c) 2010 by Dominique Dumont.
-#
+# 
 # This is free software, licensed under:
-#
+# 
 #   The GNU Lesser General Public License, Version 2.1, February 1999
-#
+# 
 # -*- cperl -*-
 
 # this file is used by test script
@@ -262,6 +262,13 @@
                            value_type => 'string',
                            match => '^foo\d{2}$',
                          },
+               prd_match => { type => 'leaf',
+                               value_type => 'string',
+                               grammar => q!token (oper token)(s?)
+                                            oper: 'and' | 'or'
+                                            token: 'Apache' | 'CC-BY' | 'Perl'
+                                           !,
+                            },
                ## too difficult to correctly test Augeas here
                'sshd_augeas' 
                => {

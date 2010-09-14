@@ -1,12 +1,12 @@
-#
+# 
 # This file is part of Config-Model-Itself
-#
+# 
 # This software is Copyright (c) 2010 by Dominique Dumont.
-#
+# 
 # This is free software, licensed under:
-#
+# 
 #   The GNU Lesser General Public License, Version 2.1, February 1999
-#
+# 
 #    Copyright (c) 2008,2010 Dominique Dumont.
 #
 #    This file is part of Config-Model-Itself.
@@ -26,14 +26,15 @@
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 
 package Config::Model::Itself::TkEditUI ;
+BEGIN {
+  $Config::Model::Itself::TkEditUI::VERSION = '1.217';
+}
 
 use strict;
 use warnings ;
 use Carp ;
 
 use base qw/Config::Model::TkUI/;
-
-our $VERSION="1.212";
 
 Construct Tk::Widget 'ConfigModelEditUI';
 
