@@ -42,7 +42,20 @@ my $build = Module::Build->new
    dist_abstract => "Graphical model editor for Config::Model",
    @version_info,
 
-
+  'build_requires' => {
+    'Module::Build' => '0.3601'
+  },
+  'configure_requires' => {
+    'Module::Build' => '0.3601'
+  },
+  'requires' => {
+    'Config::Model' => '1.207',
+    'Config::Model::TkUI' => '1.210',
+    'Log::Log4perl' => '0',
+    'Pod::POM' => '0',
+    'Tk' => '0',
+    'YAML::Any' => '0'
+  },
 
    script_files  => [ 'config-model-edit' ],
    add_to_cleanup => [qw/wr_test/] ,
