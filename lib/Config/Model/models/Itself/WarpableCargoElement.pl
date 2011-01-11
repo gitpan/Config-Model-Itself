@@ -1,12 +1,12 @@
-# 
+#
 # This file is part of Config-Model-Itself
-# 
-# This software is Copyright (c) 2010 by Dominique Dumont.
-# 
+#
+# This software is Copyright (c) 2011 by Dominique Dumont.
+#
 # This is free software, licensed under:
-# 
+#
 #   The GNU Lesser General Public License, Version 2.1, February 1999
-# 
+#
 # $Author: ddumont $
 # $Date: 2008-03-24 15:05:19 +0100 (Mon, 24 Mar 2008) $
 # $Revision: 559 $

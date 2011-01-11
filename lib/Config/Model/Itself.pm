@@ -1,12 +1,12 @@
-# 
+#
 # This file is part of Config-Model-Itself
-# 
-# This software is Copyright (c) 2010 by Dominique Dumont.
-# 
+#
+# This software is Copyright (c) 2011 by Dominique Dumont.
+#
 # This is free software, licensed under:
-# 
+#
 #   The GNU Lesser General Public License, Version 2.1, February 1999
-# 
+#
 #    Copyright (c) 2007-2010 Dominique Dumont.
 #
 #    This file is part of Config-Model-Itself.
@@ -27,7 +27,7 @@
 
 package Config::Model::Itself ;
 BEGIN {
-  $Config::Model::Itself::VERSION = '1.219';
+  $Config::Model::Itself::VERSION = '1.220';
 }
 
 use strict;
@@ -40,7 +40,7 @@ use File::Find ;
 use File::Path ;
 use File::Basename ;
 
-my $logger = Log::Log4perl::get_logger(__PACKAGE__);
+my $logger = Log::Log4perl::get_logger("Backend::Itself");
 
 =head1 NAME
 
@@ -167,7 +167,7 @@ sub read_all {
         push @files, $n if (-f $_ and not /~$/ 
                             and $n !~ /CVS/
                             and $n !~ m!.svn!
-                            and $n =~ /\b$root_model_file/
+                            and $n =~ m!$dir/$root_model_file!
                            ) ;
     } ;
     find ($wanted, $dir ) ;
@@ -204,19 +204,18 @@ sub read_all {
                 delete $new_model->{$item} ;
             }
 
-            # cleanup
-
-            # Since the element are stored in a ordered hash,
+            # Since accept specs and elements are stored in a ordered hash,
             # load_data expects a array ref instead of a hash ref.
-            # Build this array ref taking the element order into
+            # Build this array ref taking the order into
             # account
-            my $list  = delete $new_model -> {element_list} ;
-            my $elt_h = delete $new_model -> {element} ;
-            $new_model -> {element} = [] ;
-            map { 
-                push @{$new_model->{element}}, $_, $elt_h->{$_} 
-            } @$list ;
-
+            foreach my $what (qw/element accept/) {
+                my $list  = delete $new_model -> {$what.'_list'} ;
+                my $h     = delete $new_model -> {$what} ;
+                $new_model -> {$what} = [] ;
+                map { 
+                    push @{$new_model->{$what}}, $_, $h->{$_} 
+                } @$list ;
+            }
 
             # remove hash key with undefined values
             map { delete $new_model->{$_} unless defined $new_model->{$_} 
@@ -232,7 +231,6 @@ sub read_all {
     my $class_element = $model_obj->fetch_element('class') ;
     map { $class_element->fetch_with_id($_) } keys %read_models ;
 
-    #print Dumper \@read_models ;
     #require Tk::ObjScanner; Tk::ObjScanner::scan_object(\%read_models) ;
 
     $logger->info("loading all extracted data in Config::Model::Itself");
@@ -250,8 +248,12 @@ sub get_perl_data_model{
     my $class_name = $args{class_name}
       || croak __PACKAGE__," read: undefined class name";
 
-    my $class_elt = $model_obj->fetch_element('class')
-      ->fetch_with_id($class_name) ;
+    my $class_element = $model_obj->fetch_element('class') ; 
+
+    # skip if class was deleted during edition
+    return unless $class_element->defined($class_name) ;
+    
+    my $class_elt = $class_element -> fetch_with_id($class_name) ;
 
     my $model = $class_elt->dump_as_data ;
 
@@ -328,8 +330,8 @@ sub write_all {
         foreach my $class_name (@{$map_to_write{$file}}) {
             $logger->info("writing class $class_name");
             my $model 
-              = $self-> get_perl_data_model(class_name   => $class_name) ;
-            push @data, $model ;
+              = $self-> get_perl_data_model(class_name => $class_name) ;
+            push @data, $model if defined $model;
             # remove class name from above list
             delete $loaded_classes{$class_name} ;
         }
@@ -501,7 +503,7 @@ Dominique Dumont, (ddumont at cpan dot org)
 
 =head1 COPYRIGHT
 
-Copyright (C) 2007-2010 by Dominique Dumont
+Copyright (C) 2007-2011 by Dominique Dumont
 
 =head1 LICENSE
 

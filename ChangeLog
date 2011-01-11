@@ -1,3 +1,11 @@
+2011-01-09 Dominique Dumont  <domi.dumont@free.fr> 1.220
+
+	* config-model-edit: use same log4perl config files as config-edit
+	* CommonElement: added warn* parameters 
+          (require Config::Model 1.228)
+        * Fix class deletion issue
+        * Adapted model and test to new style of accept specification
+
 2010-10-15 Dominique Dumont  <domi.dumont@free.fr> 1.219
 
 	* removed obsolete push/pop_no_value_check calls 

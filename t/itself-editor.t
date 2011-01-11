@@ -22,7 +22,7 @@ my $trace = $arg =~ /t/ ? 1 : 0 ;
 $::verbose          = 1 if $arg =~ /v/;
 $::debug            = 1 if $arg =~ /d/;
 $log                = 1 if $arg =~ /l/;
-$show               = 1 if $arg =~ /s/;
+$show               = 1 if $arg =~ /[si]/;
 
 print "You can play with the widget if you run the test with 's' argument\n";
 
@@ -55,7 +55,14 @@ else {
 
 plan tests => 14 ; # avoid double print of plan when exec is run
 
-Log::Log4perl->easy_init($log ? $TRACE: $ERROR);
+my $log4perl_user_conf_file = $ENV{HOME}.'/.log4config-model' ;
+
+if (-e $log4perl_user_conf_file ) {
+    Log::Log4perl::init($log4perl_user_conf_file);
+}
+else {
+    Log::Log4perl->easy_init($arg =~ /l/ ? $DEBUG: $WARN);
+}
 
 my $meta_model = Config::Model -> new ( ) ;
 

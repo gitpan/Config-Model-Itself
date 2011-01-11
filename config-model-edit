@@ -1,15 +1,15 @@
 #!/usr/bin/perl
-# 
+#
 # This file is part of Config-Model-Itself
-# 
-# This software is Copyright (c) 2010 by Dominique Dumont.
-# 
+#
+# This software is Copyright (c) 2011 by Dominique Dumont.
+#
 # This is free software, licensed under:
-# 
+#
 #   The GNU Lesser General Public License, Version 2.1, February 1999
-# 
+#
 
-#    Copyright (c) 2007-2010 Dominique Dumont.
+#    Copyright (c) 2007-2011 Dominique Dumont.
 #
 #    This file is part of Config-Model-Itself.
 #
@@ -47,8 +47,8 @@ use vars qw/$verbose $debug/ ;
 $verbose = 0;
 $debug = 0;
 
-my $system_log4perl_conf_file = '/etc/log4config-model-edit.conf' ;
-my $user_log4perl_conf_file = 'log4config-model-edit.conf' ;
+my $log4perl_syst_conf_file = '/etc/log4config-model.conf' ;
+my $log4perl_user_conf_file = $ENV{HOME}.'/.log4config-model' ;
 my $fallback_conf = << 'EOC';
 log4perl.logger=WARN, Screen
 log4perl.appender.Screen        = Log::Log4perl::Appender::Screen
@@ -58,9 +58,9 @@ log4perl.appender.Screen.layout.ConversionPattern = %d %m %n
 EOC
 
 my $log4perl_conf 
-    = -e $user_log4perl_conf_file   ?  $user_log4perl_conf_file 
-    : -e $system_log4perl_conf_file ?  $system_log4perl_conf_file 
-    :                                 \$fallback_conf ;
+  = -e $log4perl_user_conf_file ?  $log4perl_user_conf_file
+  : -e $log4perl_syst_conf_file ?  $log4perl_syst_conf_file
+  :                               \$fallback_conf ;
 
 Log::Log4perl::init($log4perl_conf);
 
@@ -189,12 +189,17 @@ Dump a model in YAML format
 Force a save of the model even if no edition was done. This option is
 useful to migrate a model when Config::Model model feature changes.
 
-=item -model_dir
+=item -dir
 
 Directory where to read and write model
 
-=back
+=item -open_item 'path'
 
+In graphical mode, force the UI to open the node specified. E.g.
+
+ -open_item 'class:Fstab::FsLine element:fs_mntopts rules'
+
+=back
 
 =cut
 
@@ -226,6 +231,7 @@ my $load_yaml ;
 my $save = 0;
 my $load ;
 my $model_modified = 0;
+my $open_item = '';
 
 my $result = GetOptions (
 			 "dir=s"            => \$model_dir,
@@ -243,6 +249,7 @@ my $result = GetOptions (
                          "load=s"           => \$load,
                          "load_yaml=s"      => \$load_yaml,
 			 "dump_yaml!"       => \$do_yaml ,
+			 "open_item=s"      => \$open_item ,
 			);
 
 pod2usage(2) if not $result ;
@@ -275,6 +282,7 @@ my $meta_root = $meta_inst -> config_root ;
 my $rw_obj = Config::Model::Itself -> new(model_object => $meta_root ) ;
 
 my $read_model_dir = $model_dir || $dev_model_dir ;
+$read_model_dir =~ s!/$!!;
 
 my $root_model_file = $root_model ;
 $root_model_file =~ s!::!/!g ;
@@ -363,6 +371,11 @@ my $cmu = $mw->ConfigModelEditUI (-root      => $meta_root,
 				  -model_name => $root_model,
 				  -model_modified => $model_modified,
 				 ) ;
+
+if ($open_item) {
+    my $obj = $meta_root->grab($open_item) ;
+    $cmu->force_element_display($obj) ;
+}
 
 &MainLoop ; # Tk's
 

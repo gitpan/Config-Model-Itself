@@ -1,0 +1,28 @@
+Format: 1.8
+Date: Wed, 31 Mar 2010 15:39:33 +0200
+Source: libconfig-model-itself-perl
+Binary: libconfig-model-itself-perl
+Architecture: source all
+Version: 1.220-1
+Distribution: unstable
+Urgency: low
+Maintainer: Dominique Dumont <domi@ylum.gre.hp.com>
+Changed-By: Dominique Dumont <domi@ylum.gre.hp.com>
+Description: 
+ libconfig-model-itself-perl - Graphical model editor for Config::Model
+Changes: 
+ libconfig-model-itself-perl (1.220-1) unstable; urgency=low
+ .
+   *  new
+Checksums-Sha1: 
+ 1d6682f9d25839f890c37cb4e9d4adbf54d7be1a 778 libconfig-model-itself-perl_1.220-1.dsc
+ 10f1749e2efdda4661f2ce1d5ac954666af079e2 43499 libconfig-model-itself-perl_1.220-1.tar.gz
+ 704d37a025c115f63556ba4683869fb8ac6e44a2 36786 libconfig-model-itself-perl_1.220-1_all.deb
+Checksums-Sha256: 
+ 68a5093fbd9d08f5e09595e6da2dbb306c2b96ea977145c4bcd80227651c7d5f 778 libconfig-model-itself-perl_1.220-1.dsc
+ 96738a35f671854641c6cb4da3de5e3ca9dc76fc899be78ad049b35b75649dd9 43499 libconfig-model-itself-perl_1.220-1.tar.gz
+ a2d1950a9a97807e85c02777bda0db39f9e5f9061e71b0f5d54ea0db23bd776a 36786 libconfig-model-itself-perl_1.220-1_all.deb
+Files: 
+ 532b72c935b63daf7fe5bfdf41b779db 778 perl optional libconfig-model-itself-perl_1.220-1.dsc
+ 4e491dc24567e7f29a9d9eecf6186702 43499 perl optional libconfig-model-itself-perl_1.220-1.tar.gz
+ 5ac4c0fd8491f7021b1868cb45ac1614 36786 perl optional libconfig-model-itself-perl_1.220-1_all.deb

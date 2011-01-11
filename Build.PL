@@ -1,12 +1,12 @@
-# 
+#
 # This file is part of Config-Model-Itself
-# 
-# This software is Copyright (c) 2010 by Dominique Dumont.
-# 
+#
+# This software is Copyright (c) 2011 by Dominique Dumont.
+#
 # This is free software, licensed under:
-# 
+#
 #   The GNU Lesser General Public License, Version 2.1, February 1999
-# 
+#
 #    Copyright (c) 2007-2010 Dominique Dumont.
 #
 #    This file is part of Config-Model-Itself.
@@ -49,7 +49,7 @@ my $build = Module::Build->new
     'Module::Build' => '0.3601'
   },
   'requires' => {
-    'Config::Model' => '1.212',
+    'Config::Model' => '1.228',
     'Config::Model::TkUI' => '1.210',
     'Log::Log4perl' => '0',
     'Pod::POM' => '0',
