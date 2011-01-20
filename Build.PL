@@ -49,7 +49,7 @@ my $build = Module::Build->new
     'Module::Build' => '0.3601'
   },
   'requires' => {
-    'Config::Model' => '1.228',
+    'Config::Model' => '1.230',
     'Config::Model::TkUI' => '1.210',
     'Log::Log4perl' => '0',
     'Pod::POM' => '0',

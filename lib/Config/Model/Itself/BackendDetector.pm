@@ -27,7 +27,7 @@
 
 package Config::Model::Itself::BackendDetector ;
 BEGIN {
-  $Config::Model::Itself::BackendDetector::VERSION = '1.221';
+  $Config::Model::Itself::BackendDetector::VERSION = '1.222';
 }
 
 use Pod::POM ;

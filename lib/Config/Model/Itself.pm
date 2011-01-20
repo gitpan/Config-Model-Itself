@@ -27,7 +27,7 @@
 
 package Config::Model::Itself ;
 BEGIN {
-  $Config::Model::Itself::VERSION = '1.221';
+  $Config::Model::Itself::VERSION = '1.222';
 }
 
 use strict;
