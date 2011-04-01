@@ -7,7 +7,7 @@
 #
 #   The GNU Lesser General Public License, Version 2.1, February 1999
 #
-#    Copyright (c) 2007-2010 Dominique Dumont.
+#    Copyright (c) 2007-2011 Dominique Dumont.
 #
 #    This file is part of Config-Model-Itself.
 #
@@ -27,7 +27,7 @@
 
 package Config::Model::Itself ;
 BEGIN {
-  $Config::Model::Itself::VERSION = '1.222';
+  $Config::Model::Itself::VERSION = '1.223';
 }
 
 use strict;
@@ -148,14 +148,14 @@ sub read_all {
     my %args = @_ ;
     my $model_obj = $self->{model_object};
     my $dir = $args{model_dir} 
-      || croak __PACKAGE__," read_all: undefined config dir";
+      || croak __PACKAGE__," read_all: undefined model dir";
     my $model = $args{root_model} 
       || croak __PACKAGE__," read_all: undefined root_model";
     my $force_load = $args{force_load} || 0 ;
     my $legacy = $args{legacy} ;
 
     unless (-d $dir ) {
-        croak __PACKAGE__," read_all: unknown config dir $dir";
+        croak __PACKAGE__," read_all: unknown model dir $dir";
     }
 
     my $root_model_file = $model ;
@@ -166,7 +166,7 @@ sub read_all {
         my $n = $File::Find::name ;
         push @files, $n if (-f $_ and not /~$/ 
                             and $n !~ /CVS/
-                            and $n !~ m!.svn!
+                            and $n !~ m!.(svn|orig|pod)$!
                             and $n =~ m!$dir/$root_model_file!
                            ) ;
     } ;
@@ -174,6 +174,7 @@ sub read_all {
 
     my $i = $model_obj->instance ;
     my %read_models ;
+    my %pod_data ;
     my %class_file_map ;
 
     for my $file (@files) {
@@ -229,13 +230,22 @@ sub read_all {
     # Create all classes listed in %read_models to avoid problems with
     # include statement while calling load_data
     my $class_element = $model_obj->fetch_element('class') ;
-    map { $class_element->fetch_with_id($_) } keys %read_models ;
+    map { $class_element->fetch_with_id($_) } sort keys %read_models ;
 
     #require Tk::ObjScanner; Tk::ObjScanner::scan_object(\%read_models) ;
 
     $logger->info("loading all extracted data in Config::Model::Itself");
     # load with a array ref to avoid warnings about missing order
     $model_obj->load_data( {class => [ %read_models ] }, undef, $force_load ? 'no' : 'yes' ) ;
+
+    # load annotations
+    for my $file (@files) {
+        $logger->info("loading annotations from file $file");
+        my $fh = IO::File->new($file) || die "Can't open $file: $!" ;
+        my @lines = $fh->getlines ;  
+        $fh->close;
+        $model_obj->load_pod_annotation(join('',@lines)) ;
+    }
 
     return $self->{map} = \%class_file_map ;
 }
@@ -299,7 +309,7 @@ sub write_all {
         mkpath($dir,0, 0755) || die "Can't mkpath $dir:$!";
     }
 
-    my $i = $model_obj->instance ;
+    #my $i = $model_obj->instance ;
 
     # get list of all classes loaded by the editor
     my %loaded_classes 
@@ -326,12 +336,16 @@ sub write_all {
         $logger->info("writing config file $file");
 
         my @data ;
+        my @notes ;
 
         foreach my $class_name (@{$map_to_write{$file}}) {
             $logger->info("writing class $class_name");
             my $model 
               = $self-> get_perl_data_model(class_name => $class_name) ;
             push @data, $model if defined $model;
+            
+            my $node = $self->{model_object}->grab("class:".$class_name) ;
+            push @notes, $node->dump_annotations_as_pod ;
             # remove class name from above list
             delete $loaded_classes{$class_name} ;
         }
@@ -342,13 +356,17 @@ sub write_all {
             mkpath($wr_dir,0, 0755) || die "Can't mkpath $wr_dir:$!";
         }
 
-        open (WR, ">$wr_file") || croak "Cannot open file $wr_file:$!" ;
-        my $dumper = Data::Dumper->new([\@data]) ;
-        $dumper->Terse(1) ;
-        print WR $dumper->Dump , ";\n";
-        close WR ;
-    }
+        my $wr = IO::File->new ($wr_file,'>') || croak "Cannot open file $wr_file:$!" ;
 
+        my $dumper = Data::Dumper->new([\@data]) ;
+        $dumper->Indent(1) ; # avoid too deep indentation
+        $dumper->Terse(1) ; # allow unnamed variables in dump
+        $wr->print ($dumper->Dump , ";\n\n");
+
+        $wr->print( join("\n",@notes )) ;
+
+        $wr->close ;
+    }
 }
 
 

@@ -68,6 +68,14 @@ my $meta_model = Config::Model -> new ( ) ;
 
 Config::Model::Exception::Any->Trace(1) if $arg =~ /e/;
 
+{
+    no warnings "redefine" ;
+    sub Tk::Error {
+        my ($widget,$error,@locations) = @_;
+        die $error ;
+    }
+}
+
 ok(1,"compiled");
 
 rmtree($wr_test) if -d $wr_test ;

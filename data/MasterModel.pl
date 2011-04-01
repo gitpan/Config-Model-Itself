@@ -332,7 +332,6 @@
             },
             'Source' => {
                 'value_type'   => 'string',
-                'mandatory'    => '1',
                 'migrate_from' => {
                     'use_eval'  => '1',
                     'formula'   => '$old || $older ;',
@@ -355,7 +354,10 @@
                 config_class_name => 'MasterModel::SshdWithAugeas',
             },
         ],
-        description => [ tree_macro => 'controls behavior of other elements' ]
+        description => [ tree_macro => 'controls behavior of other elements' ],
+        author    => "dod\@foo.com",
+        copyright => "2011 dod",
+        license   =>  "LGPL",
     ],
 ];
 

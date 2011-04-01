@@ -1,0 +1,236 @@
+=head1 NAME
+
+Config::Model::models::Itself::ConfigAccept - Configuration class Itself::ConfigAccept
+
+=head1 DESCRIPTION
+
+Configuration classes used by L<Config::Model>
+
+=head1 Elements
+
+=head2 C<name_match>
+
+Define a Perl regular expression that is tested agaisnt 
+           candidate parameters. When the parameter matches the regular expression, 
+           a new parameter is created in the model using the description provided
+           within the "accept" declaration. Note that the regexp must match the whole 
+           candidate parameter name. I.e. the specified regexp will be eval'ed 
+           with a leading ^ and a trailing $. Without a specification, all parameters
+           are acceptedOptional. Type uniline. upstream_default: '.*'.
+
+=head2 C<type>
+
+specify the type of the configuration element.Leaf is used for plain value.Mandatory. Type enum. choice: 'node', 'warped_node', 'hash', 'list', 'leaf', 'check_list'.
+
+=head2 C<value_type>
+
+Optional. Type enum.
+
+=head2 C<class>
+
+Perl class name of a child of Config::Model::ValueOptional. Type uniline.
+
+=head2 C<follow>
+
+Specifies the path to the value elements that drive the change of this node. Each key of the has is a variable name used in the 'rules' parameter. The value of the hash is a path in the configuration treeOptional. Type hash of uniline.
+
+=head2 C<morph>
+
+When set, a recurse copy of the value from the old object to the new object will be attemped. When a copy is not possible, undef values will be assigned.Optional. Type boolean.
+
+=head2 C<refer_to>
+
+points to an array or hash element in the configuration tree using the path syntax. The available choice of this reference value (or check list)is made from the available keys of the pointed hash element or the values of the pointed array element.Optional. Type uniline.
+
+=head2 C<computed_refer_to>
+
+points to an array or hash element in the configuration tree using a path computed with value from several other elements in the configuration tree. The available choice of this reference value (or check list) is made from the available keys of the pointed hash element or the values of the pointed array element.Optional. Type warped_node.
+
+=head2 C<replace_follow>
+
+Path specifying a hash of value element in the configuration tree. The hash if used in a way similar to the replace parameter. In this case, the replacement is not coded in the model but specified by the configuration.Optional. Type uniline.
+
+=head2 C<compute>
+
+compute the default value according to a formula and value from other elements in the configuration tree.Optional. Type warped_node.
+
+=head2 C<migrate_from>
+
+                  Specify an upgrade path from an old value and compute the value to store in the new element.Optional. Type warped_node.
+
+=head2 C<mandatory>
+
+Optional. Type boolean.
+
+=head2 C<config_class_name>
+
+Optional. Type reference.
+
+=head2 C<choice>
+
+Specify the possible valuesOptional. Type list of uniline.
+
+=head2 C<min>
+
+minimum valueOptional. Type integer.
+
+=head2 C<max>
+
+maximum valueOptional. Type integer.
+
+=head2 C<min_index>
+
+minimum number of keysOptional. Type integer.
+
+=head2 C<max_index>
+
+maximum number of keysOptional. Type integer.
+
+=head2 C<default>
+
+Specify default value. This default value will be written in the configuration dataOptional. Type uniline.
+
+=head2 C<upstream_default>
+
+Another way to specify a default value. But this default value is considered as "built_in" the application and is not written in the configuration data (unless modified)Optional. Type uniline.
+
+=head2 C<convert>
+
+When stored, the value will be converted to uppercase (uc) or lowercase (lc).Optional. Type enum.
+
+=head2 C<match>
+
+Perl regular expression to assert the validity of the value.Optional. Type uniline.
+
+=head2 C<warn_if_match>
+
+Warn user if value matches the regular expressionOptional. Type hash of node.
+
+=head2 C<warn_unless_match>
+
+Warn user if value does not match the regular expressionOptional. Type hash of node.
+
+=head2 C<warn>
+
+Unconditionaly issue a warning with this string when this parameter is used. This should be used mostly with "accept"Optional. Type uniline.
+
+=head2 C<grammar>
+
+Feed this grammar to Parse::RecDescent to perform validationOptional. Type string.
+
+=head2 C<default_list>
+
+Specify items checked by defaultOptional. Type check_list.
+
+=head2 C<upstream_default_list>
+
+Specify items checked by default in the applicationOptional. Type check_list.
+
+=head2 C<allow_keys_from>
+
+this hash will allow keys from the keys of the hash pointed by the path stringOptional. Type uniline.
+
+=head2 C<allow_keys_matching>
+
+Keys must match the specified regular expression.Optional. Type uniline.
+
+=head2 C<follow_keys_from>
+
+this hash will contain the same keys as the hash pointed by the path stringOptional. Type uniline.
+
+=head2 C<warn_if_key_match>
+
+Warn user if a key is created matching this regular expressionOptional. Type uniline.
+
+=head2 C<warn_unless_key_match>
+
+Warn user if a key is created not matching this regular expressionOptional. Type uniline.
+
+=head2 C<migrate_keys_from>
+
+Optional. Type uniline.
+
+=head2 C<ordered>
+
+keep track of the order of the elements of this hashOptional. Type boolean.
+
+=head2 C<default_keys>
+
+default keys hashes.Optional. Type list of string.
+
+=head2 C<auto_create_keys>
+
+always create a set of keys specified in this listOptional. Type list of string.
+
+=head2 C<allow_keys>
+
+specify a set of allowed keysOptional. Type list of string.
+
+=head2 C<auto_create_ids>
+
+always create the number of id specified in this integerOptional. Type string.
+
+=head2 C<default_with_init>
+
+specify a set of keys to create and initialization on some elements . E.g. ' foo => "X=Av Y=Bv", bar => "Y=Av Z=Cz"' Optional. Type hash of string.
+
+=head2 C<max_nb>
+
+Optional. Type integer.
+
+=head2 C<replace>
+
+Used for enum to substitute one value with another. This parameter must be used to enable user to upgrade a configuration with obsolete values. The old value is the key of the hash, the new one is the value of the hashOptional. Type hash of string.
+
+=head2 C<help>
+
+Specify help string specific to possible values. E.g for "light" value, you could write " red => 'stop', green => 'walk' Optional. Type hash of string.
+
+=head2 C<status>
+
+Optional. Type enum. choice: 'obsolete', 'deprecated', 'standard'. upstream_default: 'standard'.
+
+=head2 C<experience>
+
+Used to categorize configuration elements in several "required skills". Use this feature if you need to hide a parameter to novice usersOptional. Type enum. choice: 'master', 'advanced', 'beginner'. upstream_default: 'beginner'.
+
+=head2 C<level>
+
+Used to highlight important parameter or to hide others. Hidden parameter are mostly used to hide features that are unavailable at start time. They can be made available later using warp mechanismOptional. Type enum. choice: 'important', 'normal', 'hidden'. upstream_default: 'normal'.
+
+=head2 C<summary>
+
+enter short information regarding this elementOptional. Type uniline.
+
+=head2 C<description>
+
+enter detailed help information regarding this elementOptional. Type string.
+
+=head2 C<warp>
+
+change the properties (i.e. default value or its value_type) dynamically according to the value of another Value object locate elsewhere in the configuration tree. Optional. Type warped_node.
+
+=head2 C<rules>
+
+Each key of a hash is a boolean expression using variables declared in the 'follow' parameters. The value of the hash specifies the effects on the nodeOptional. Type hash of warped_node.
+
+=head2 C<index_type>
+
+Specify the type of allowed index for the hash. "String" means no restriction.Optional. Type enum.
+
+=head2 C<cargo>
+
+Specify the properties of the configuration element configuration in this hash or listOptional. Type warped_node.
+
+=head1 SEE ALSO
+
+=over
+
+=item L<config-edit>
+
+=item L<Config::Model::models::CommonElement::WarnIf>
+
+=back
+
+=cut
+

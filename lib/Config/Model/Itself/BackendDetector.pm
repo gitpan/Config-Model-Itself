@@ -27,7 +27,7 @@
 
 package Config::Model::Itself::BackendDetector ;
 BEGIN {
-  $Config::Model::Itself::BackendDetector::VERSION = '1.222';
+  $Config::Model::Itself::BackendDetector::VERSION = '1.223';
 }
 
 use Pod::POM ;
@@ -42,11 +42,7 @@ sub setup_enum_choice {
     my $self = shift ;
     my @choices = ref $_[0] ? @{$_[0]} : @_ ;
 
-    #find available backends
-
-    my $path = $INC{"Config/Model.pm"} ;
-    $path =~ s!\.pm!/Backend! ;
-
+    # find available backends in all @INC directories
     my $wanted = sub { 
         my $n = $File::Find::name ;
         if (-f $_ and $n =~ s/\.pm$// and $n !~ /Any$/) {
@@ -55,7 +51,11 @@ sub setup_enum_choice {
 	    push @choices , $n ;
         }
     } ;
-    find ($wanted, $path ) ;
+
+    foreach my $inc (@INC) {
+        my $path = "$inc/Config/Model/Backend" ;
+        find ($wanted, $path ) if -d $path;
+    }
     
     $self->SUPER::setup_enum_choice(@choices) ;
 }

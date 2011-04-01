@@ -1,0 +1,26 @@
+=head1 NAME
+
+Config::Model::models::Itself::Model - Configuration class Itself::Model
+
+=head1 DESCRIPTION
+
+Configuration classes used by L<Config::Model>
+
+=head1 Elements
+
+=head2 C<class>
+
+A configuration model is made of several configuration classes.Optional. Type hash of node.
+
+=head1 SEE ALSO
+
+=over
+
+=item L<config-edit>
+
+=item L<Config::Model::models::Itself::Class>
+
+=back
+
+=cut
+

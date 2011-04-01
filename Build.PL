@@ -43,13 +43,15 @@ my $build = Module::Build->new
    @version_info,
 
   'build_requires' => {
-    'Module::Build' => '0.3601'
+    'Module::Build' => '0.3601',
+    'Test::Differences' => '0',
+    'Test::More' => '0'
   },
   'configure_requires' => {
     'Module::Build' => '0.3601'
   },
   'requires' => {
-    'Config::Model' => '1.230',
+    'Config::Model' => '1.236',
     'Config::Model::TkUI' => '1.210',
     'Log::Log4perl' => '0',
     'Pod::POM' => '0',
