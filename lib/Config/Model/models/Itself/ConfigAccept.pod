@@ -228,7 +228,7 @@ Specify the properties of the configuration element configuration in this hash o
 
 =item L<config-edit>
 
-=item L<Config::Model::models::CommonElement::WarnIf>
+=item L<Config::Model::models::Itself::CommonElement::WarnIf>
 
 =back
 

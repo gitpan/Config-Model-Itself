@@ -1,6 +1,6 @@
 =head1 NAME
 
-Config::Model::models::CommonElement::WarnIf - Configuration class CommonElement::WarnIf
+Config::Model::models::Itself::CommonElement::WarnIf - Configuration class Itself::CommonElement::WarnIf
 
 =head1 DESCRIPTION
 

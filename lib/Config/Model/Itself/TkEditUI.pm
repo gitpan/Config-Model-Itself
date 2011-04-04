@@ -27,7 +27,7 @@
 
 package Config::Model::Itself::TkEditUI ;
 BEGIN {
-  $Config::Model::Itself::TkEditUI::VERSION = '1.223';
+  $Config::Model::Itself::TkEditUI::VERSION = '1.224';
 }
 
 use strict;

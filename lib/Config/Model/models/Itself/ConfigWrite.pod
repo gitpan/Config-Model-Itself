@@ -32,6 +32,10 @@ Specify how to save the configuration file. Either create a newfile (with extens
 
 Specify the configuration file (without path) that will store configuration informationOptional. Type uniline.
 
+=head2 C<full_dump>
+
+Also dump default values in the data structure. Useful if the dumped configuration data will be used by the application. (default is yes)Optional. Type boolean. upstream_default: '1'.
+
 =head2 C<comment_delimiter>
 
 comment starts with this characterOptional. Type uniline. upstream_default: '#'.

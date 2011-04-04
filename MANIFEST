@@ -17,13 +17,13 @@ data/MasterModel/X_base_class.pl
 lib/Config/Model/Itself.pm
 lib/Config/Model/Itself/BackendDetector.pm
 lib/Config/Model/Itself/TkEditUI.pm
-lib/Config/Model/models/CommonElement/WarnIf.pod
 lib/Config/Model/models/Itself/CargoElement.pl
 lib/Config/Model/models/Itself/CargoWarpRule.pl
 lib/Config/Model/models/Itself/CargoWarpValue.pl
 lib/Config/Model/models/Itself/Class.pl
 lib/Config/Model/models/Itself/Class.pod
 lib/Config/Model/models/Itself/CommonElement.pl
+lib/Config/Model/models/Itself/CommonElement/WarnIf.pod
 lib/Config/Model/models/Itself/ComputedValue.pl
 lib/Config/Model/models/Itself/ConfigAccept.pod
 lib/Config/Model/models/Itself/ConfigRead.pod

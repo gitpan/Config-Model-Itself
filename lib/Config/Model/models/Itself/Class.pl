@@ -212,7 +212,18 @@
                 description =>
 'Specify the configuration file (without path) that will store configuration information',
             },
-            'comment_delimiter' => {
+             'full_dump' => {
+                type             => 'leaf',
+                value_type       => 'boolean',
+                level            => 'hidden',
+                description      => 'Also dump default values in the data structure. Useful if the dumped configuration data will be used by the application. (default is yes)',
+                upstream_default => '1',
+                warp             => {
+                    follow => { backend => '- backend' },
+                    rules  => [ '$backend =~ /yaml|perl/i' => { level => 'normal', } ],
+                }
+            },
+           'comment_delimiter' => {
                 type             => 'leaf',
                 value_type       => 'uniline',
                 level            => 'hidden',

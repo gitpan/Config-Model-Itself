@@ -6,7 +6,7 @@ Config::Model::models::Itself::Class - Configuration class Itself::Class
 
 Configuration classes used by L<Config::Model>
 
-Configuration class. This class reprensents node of a configuration tree.
+Configuration class. This class represents a node of a configuration tree.
 
 =head1 Elements
 
@@ -91,7 +91,7 @@ Specifies names of the elements this configuration class will accept as valid (b
 
 =over
 
-=item 2007-2010 Dominique Dumont.
+=item 2007-2011 Dominique Dumont.
 
 
 =back
