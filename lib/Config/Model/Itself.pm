@@ -27,7 +27,7 @@
 
 package Config::Model::Itself ;
 BEGIN {
-  $Config::Model::Itself::VERSION = '1.224';
+  $Config::Model::Itself::VERSION = '1.225';
 }
 
 use strict;
@@ -65,7 +65,7 @@ Config::Model::Itself - Model editor for Config::Model
  $rw_obj -> read_all( conf_dir => '/path/to/model_files') ;
 
  # For Curses UI prepare a call-back to write model
- my $wr_back = sub { $rw_obj->write_all(conf_dir => '/path/to/model_files');
+ my $wr_back = sub { $rw_obj->write_all(model_dir => '/path/to/model_files');
 
  # create Curses user interface
  my $dialog = Config::Model::CursesUI-> new
@@ -301,7 +301,7 @@ sub write_all {
     my %args = @_ ;
     my $model_obj = $self->{model_object} ;
     my $dir = $args{model_dir} 
-      || croak __PACKAGE__," write_all: undefined config dir";
+      || croak __PACKAGE__," write_all: undefined model_dir";
 
     my $map = $self->{map} ;
 
@@ -361,7 +361,12 @@ sub write_all {
         my $dumper = Data::Dumper->new([\@data]) ;
         $dumper->Indent(1) ; # avoid too deep indentation
         $dumper->Terse(1) ; # allow unnamed variables in dump
-        $wr->print ($dumper->Dump , ";\n\n");
+
+        my $dump = $dumper->Dump;
+        # munge pod text embedded in values to avoid spurious pod formatting
+        $dump =~ s/\n=/\n'.'=/g ;
+
+        $wr->print ( $dump , ";\n\n");
 
         $wr->print( join("\n",@notes )) ;
 
