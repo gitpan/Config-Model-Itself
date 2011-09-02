@@ -14,7 +14,7 @@ Warning message to show user. Leave blank or undef to use generated message. I<<
 
 =head2 fix
 
-Perl instructions to fix the value. These instructions may be triggered by user. $_ will contain the value to fix.  $_ will be stored as the new value once the instructions are done. I<< Optional. Type string.  >>
+Perl instructions to fix the value. These instructions may be triggered by user. $_ will contain the value to fix.  $_ will be stored as the new value once the instructions are done.I<< Optional. Type string.  >>
 
 =head1 SEE ALSO
 

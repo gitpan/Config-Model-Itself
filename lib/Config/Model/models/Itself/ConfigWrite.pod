@@ -10,11 +10,11 @@ Configuration classes used by L<Config::Model>
 
 =head2 syntax
 
-Deprecated parameter that specified the file syntax to store permanently configuration data. Replaced by "backend". I<< Optional. Type enum. choice: 'cds', 'perl', 'ini', 'custom'.  >>
+Deprecated parameter that specified the file syntax to store permanently configuration data. Replaced by "backend"I<< Optional. Type enum. choice: 'cds', 'perl', 'ini', 'custom'.  >>
 
 =head2 backend
 
-specifies the backend to store permanently configuration data. I<< Optional. Type enum. choice: 'cds_file', 'perl_file', 'ini_file', 'augeas', 'custom'.  >>
+specifies the backend to store permanently configuration data.I<< Optional. Type enum. choice: 'cds_file', 'perl_file', 'ini_file', 'augeas', 'custom'.  >>
 
 Here are some explanations on the possible values:
 
@@ -46,7 +46,7 @@ file with a perl data structure. Configuration filename is made with instance na
 
 =head2 file - target configuration file name
 
-specify the configuration file name. This parameter may not be applicable depending on your application. It may also be hardcoded in a custom backend. If not specified, the instance name will be used as base name for your configuration file. I<< Optional. Type uniline.  >>
+specify the configuration file name. This parameter may not be applicable depending on your application. It may also be hardcoded in a custom backend. If not specified, the instance name will be used as base name for your configuration file.I<< Optional. Type uniline.  >>
 
 =head2 class
 
@@ -62,7 +62,7 @@ Specify the configuration file (without path) that will store configuration info
 
 =head2 full_dump
 
-Also dump default values in the data structure. Useful if the dumped configuration data will be used by the application. (default is yes). I<< Optional. Type boolean. upstream_default: '1'.  >>
+Also dump default values in the data structure. Useful if the dumped configuration data will be used by the application. (default is yes)I<< Optional. Type boolean. upstream_default: '1'.  >>
 
 =head2 comment_delimiter
 
@@ -74,7 +74,7 @@ Sometimes, the structure of a file loaded by Augeas starts directly with a list 
 
 =head2 sequential_lens
 
-List of hash or list Augeas lenses where value are stored in sequential Augeas nodes. See Config::Model::Backend::Augeas for details. I<< Optional. Type list of uniline.  >>
+List of hash or list Augeas lenses where value are stored in sequential Augeas nodes. See Config::Model::Backend::Augeas for details.I<< Optional. Type list of uniline.  >>
 
 =head2 function
 

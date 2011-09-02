@@ -26,8 +26,8 @@
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 
 package Config::Model::Itself::BackendDetector ;
-BEGIN {
-  $Config::Model::Itself::BackendDetector::VERSION = '1.225';
+{
+  $Config::Model::Itself::BackendDetector::VERSION = '1.226';
 }
 
 use Pod::POM ;

@@ -14,7 +14,7 @@ I<< Optional. Type uniline. upstream_default: '.*'.  >>
 
 =head2 type
 
-specify the type of the configuration element.Leaf is used for plain value. I<< Mandatory. Type enum. choice: 'node', 'warped_node', 'hash', 'list', 'leaf', 'check_list'.  >>
+specify the type of the configuration element.Leaf is used for plain value.I<< Mandatory. Type enum. choice: 'node', 'warped_node', 'hash', 'list', 'leaf', 'check_list'.  >>
 
 =head2 value_type
 
@@ -30,27 +30,27 @@ Specifies the path to the value elements that drive the change of this node. Eac
 
 =head2 morph
 
-When set, a recurse copy of the value from the old object to the new object will be attemped. When a copy is not possible, undef values will be assigned. I<< Optional. Type boolean.  >>
+When set, a recurse copy of the value from the old object to the new object will be attemped. When a copy is not possible, undef values will be assigned.I<< Optional. Type boolean.  >>
 
 =head2 refer_to
 
-points to an array or hash element in the configuration tree using the path syntax. The available choice of this reference value (or check list)is made from the available keys of the pointed hash element or the values of the pointed array element. I<< Optional. Type uniline.  >>
+points to an array or hash element in the configuration tree using the path syntax. The available choice of this reference value (or check list)is made from the available keys of the pointed hash element or the values of the pointed array element.I<< Optional. Type uniline.  >>
 
 =head2 computed_refer_to
 
-points to an array or hash element in the configuration tree using a path computed with value from several other elements in the configuration tree. The available choice of this reference value (or check list) is made from the available keys of the pointed hash element or the values of the pointed array element. I<< Optional. Type warped_node.  >>
+points to an array or hash element in the configuration tree using a path computed with value from several other elements in the configuration tree. The available choice of this reference value (or check list) is made from the available keys of the pointed hash element or the values of the pointed array element.I<< Optional. Type warped_node.  >>
 
 =head2 replace_follow
 
-Path specifying a hash of value element in the configuration tree. The hash if used in a way similar to the replace parameter. In this case, the replacement is not coded in the model but specified by the configuration. I<< Optional. Type uniline.  >>
+Path specifying a hash of value element in the configuration tree. The hash if used in a way similar to the replace parameter. In this case, the replacement is not coded in the model but specified by the configuration.I<< Optional. Type uniline.  >>
 
 =head2 compute
 
-compute the default value according to a formula and value from other elements in the configuration tree. I<< Optional. Type warped_node.  >>
+compute the default value according to a formula and value from other elements in the configuration tree.I<< Optional. Type warped_node.  >>
 
 =head2 migrate_from
 
-                  Specify an upgrade path from an old value and compute the value to store in the new element. I<< Optional. Type warped_node.  >>
+                  Specify an upgrade path from an old value and compute the value to store in the new element.I<< Optional. Type warped_node.  >>
 
 =head2 mandatory
 
@@ -86,15 +86,15 @@ Specify default value. This default value will be written in the configuration d
 
 =head2 upstream_default
 
-Another way to specify a default value. But this default value is considered as "built_in" the application and is not written in the configuration data (unless modified). I<< Optional. Type uniline.  >>
+Another way to specify a default value. But this default value is considered as "built_in" the application and is not written in the configuration data (unless modified)I<< Optional. Type uniline.  >>
 
 =head2 convert
 
-When stored, the value will be converted to uppercase (uc) or lowercase (lc). I<< Optional. Type enum.  >>
+When stored, the value will be converted to uppercase (uc) or lowercase (lc).I<< Optional. Type enum.  >>
 
 =head2 match
 
-Perl regular expression to assert the validity of the value. I<< Optional. Type uniline.  >>
+Perl regular expression to assert the validity of the value.I<< Optional. Type uniline.  >>
 
 =head2 warn_if_match
 
@@ -106,7 +106,7 @@ Warn user if value does not match the regular expression. I<< Optional. Type has
 
 =head2 warn
 
-Unconditionaly issue a warning with this string when this parameter is used. This should be used mostly with "accept". I<< Optional. Type string.  >>
+Unconditionaly issue a warning with this string when this parameter is used. This should be used mostly with "accept"I<< Optional. Type string.  >>
 
 =head2 grammar
 
@@ -126,7 +126,7 @@ this hash will allow keys from the keys of the hash pointed by the path string. 
 
 =head2 allow_keys_matching
 
-Keys must match the specified regular expression. I<< Optional. Type uniline.  >>
+Keys must match the specified regular expression.I<< Optional. Type uniline.  >>
 
 =head2 follow_keys_from
 
@@ -150,7 +150,7 @@ keep track of the order of the elements of this hash. I<< Optional. Type boolean
 
 =head2 default_keys
 
-default keys hashes. I<< Optional. Type list of string.  >>
+default keys hashes.I<< Optional. Type list of string.  >>
 
 =head2 auto_create_keys
 
@@ -166,7 +166,7 @@ always create the number of id specified in this integer. I<< Optional. Type str
 
 =head2 default_with_init
 
-specify a set of keys to create and initialization on some elements . E.g. ' foo => "X=Av Y=Bv", bar => "Y=Av Z=Cz"' . I<< Optional. Type hash of string.  >>
+specify a set of keys to create and initialization on some elements . E.g. ' foo => "X=Av Y=Bv", bar => "Y=Av Z=Cz"' I<< Optional. Type hash of string.  >>
 
 =head2 max_nb
 
@@ -176,9 +176,13 @@ I<< Optional. Type integer.  >>
 
 Used for enum to substitute one value with another. This parameter must be used to enable user to upgrade a configuration with obsolete values. The old value is the key of the hash, the new one is the value of the hash. I<< Optional. Type hash of string.  >>
 
+=head2 duplicates
+
+Specify the policy regarding duplicated values stored in the list or as hash values (valid only when cargo type is "leaf"). The policy can be "allow" (default), "suppress", "warn" (which offers the possibility to apply a fix), "forbid".I<< Optional. Type enum. choice: 'allow', 'suppress', 'warn', 'forbid'. upstream_default: 'allow'.  >>
+
 =head2 help
 
-Specify help string specific to possible values. E.g for "light" value, you could write " red => 'stop', green => 'walk' . I<< Optional. Type hash of string.  >>
+Specify help string specific to possible values. E.g for "light" value, you could write " red => 'stop', green => 'walk' I<< Optional. Type hash of string.  >>
 
 =head2 status
 
@@ -202,7 +206,7 @@ enter detailed help information regarding this element. I<< Optional. Type strin
 
 =head2 warp
 
-change the properties (i.e. default value or its value_type) dynamically according to the value of another Value object locate elsewhere in the configuration tree. . I<< Optional. Type warped_node.  >>
+change the properties (i.e. default value or its value_type) dynamically according to the value of another Value object locate elsewhere in the configuration tree. I<< Optional. Type warped_node.  >>
 
 =head2 rules
 
@@ -210,7 +214,7 @@ Each key of a hash is a boolean expression using variables declared in the 'foll
 
 =head2 index_type
 
-Specify the type of allowed index for the hash. "String" means no restriction. I<< Optional. Type enum.  >>
+Specify the type of allowed index for the hash. "String" means no restriction.I<< Optional. Type enum.  >>
 
 =head2 cargo
 

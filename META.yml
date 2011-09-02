@@ -9,17 +9,17 @@ build_requires:
 configure_requires:
   Module::Build: 0.3601
 dynamic_config: 0
-generated_by: 'Dist::Zilla version 4.200007, CPAN::Meta::Converter version 2.110930'
+generated_by: 'Dist::Zilla version 4.300000, CPAN::Meta::Converter version 2.112150'
 license: lgpl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
 name: Config-Model-Itself
 requires:
-  Config::Model: 1.236
+  Config::Model: 1.252
   Config::Model::TkUI: 1.210
   Log::Log4perl: 0
   Pod::POM: 0
   Tk: 0
   YAML::Any: 0
-version: 1.225
+version: 1.226
