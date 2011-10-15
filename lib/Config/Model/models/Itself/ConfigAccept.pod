@@ -96,13 +96,21 @@ When stored, the value will be converted to uppercase (uc) or lowercase (lc).I<<
 
 Perl regular expression to assert the validity of the value.I<< Optional. Type uniline.  >>
 
+=head2 assert
+
+Raise an error if the test code snippet does returns false. I<< Optional. Type hash of node.  >>
+
+=head2 warn_unless
+
+Warn user if the tes code snippet does returns false. I<< Optional. Type hash of node.  >>
+
 =head2 warn_if_match
 
-Warn user if value matches the regular expression. I<< Optional. Type hash of node.  >>
+Warn user if a I<defined> value matches the regular expression. I<< Optional. Type hash of node.  >>
 
 =head2 warn_unless_match
 
-Warn user if value does not match the regular expression. I<< Optional. Type hash of node.  >>
+Warn user if I<defined> value does not match the regular expression. I<< Optional. Type hash of node.  >>
 
 =head2 warn
 
@@ -230,7 +238,11 @@ L<config-edit>
 
 =item *
 
-L<Config::Model::models::Itself::CommonElement::WarnIf>
+L<Config::Model::models::Itself::CommonElement::Assert>
+
+=item *
+
+L<Config::Model::models::Itself::CommonElement::WarnIfMatch>
 
 =back
 
