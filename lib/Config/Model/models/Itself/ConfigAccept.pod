@@ -50,7 +50,11 @@ compute the default value according to a formula and value from other elements i
 
 =head2 migrate_from
 
-                  Specify an upgrade path from an old value and compute the value to store in the new element.I<< Optional. Type warped_node.  >>
+Specify an upgrade path from an old value and compute the value to store in the new element.I<< Optional. Type warped_node.  >>
+
+=head2 write_as
+
+Specify how to write a boolean value. Example 'no' 'yes'.I<< Optional. Type list of uniline.  >>
 
 =head2 mandatory
 
@@ -90,7 +94,7 @@ Another way to specify a default value. But this default value is considered as 
 
 =head2 convert
 
-When stored, the value will be converted to uppercase (uc) or lowercase (lc).I<< Optional. Type enum.  >>
+Convert value or index to uppercase (uc) or lowercase (lc).I<< Optional. Type enum.  >>
 
 =head2 match
 
@@ -114,7 +118,7 @@ Warn user if I<defined> value does not match the regular expression. I<< Optiona
 
 =head2 warn
 
-Unconditionaly issue a warning with this string when this parameter is used. This should be used mostly with "accept"I<< Optional. Type string.  >>
+Unconditionally issue a warning with this string when this parameter is used. This should be used mostly with "accept"I<< Optional. Type string.  >>
 
 =head2 grammar
 

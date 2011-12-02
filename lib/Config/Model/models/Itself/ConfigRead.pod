@@ -56,6 +56,38 @@ I<< Optional. Type uniline.  >>
 
 Specify how to save the configuration file. Either create a newfile (with extension .augnew, and do not overwrite the original file) or move the original file into a backup file (.augsave extension). Configuration files are overwritten by default. I<< Optional. Type enum. choice: 'backup', 'newfile'.  >>
 
+=head2 store_class_in_hash
+
+Specify element hash name that will contain all INI classes. See L<Config::Model::Backend::IniFile/"Arbitrary class name">I<< Optional. Type uniline.  >>
+
+=head2 section_map
+
+Specify element name that will contain one INI class. E.g. to store INI class [foo] in element Foo, specify { foo => "Foo" } I<< Optional. Type hash of uniline.  >>
+
+=head2 split_list_value
+
+Regexp to split values stored in list element. Usually "\s+" or "[,\s]"I<< Optional. Type uniline.  >>
+
+=head2 join_list_value
+
+string to join values from list element. Usually " " or ", "I<< Optional. Type uniline.  >>
+
+=head2 write_boolean_as
+
+Specify how to write a boolean value in config file. Suggested values are "no","yes". I<< Optional. Type list of uniline.  >>
+
+=head2 force_lc_section
+
+force section to be lowercase. I<< Optional. Type boolean. upstream_default: '0'.  >>
+
+=head2 force_lc_key
+
+force key names to be lowercase. I<< Optional. Type boolean. upstream_default: '0'.  >>
+
+=head2 force_lc_value
+
+force values to be lowercase. I<< Optional. Type boolean. upstream_default: '0'.  >>
+
 =head2 config_file
 
 Specify the configuration file (without path) that will store configuration information. I<< Optional. Type uniline.  >>
@@ -82,7 +114,7 @@ I<< Optional. Type uniline.  >>
 
 =head2 config_dir
 
-I<< Mandatory. Type uniline.  >>
+I<< Optional. Type uniline.  >>
 
 =head2 auto_create - Creates configuration files as needed
 

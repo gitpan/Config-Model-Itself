@@ -238,7 +238,7 @@ my %assert_payload = (
                 warp        => {
                     follow  => { 'type' => '?type', },
                     'rules' => [
-                        '$type eq "hash"' =>
+                        '$type eq "hash" or $type eq "list"' =>
                           { level => 'normal', },
                     ]
                 }
@@ -273,12 +273,11 @@ my %assert_payload = (
                 value_type => 'enum',
                 level      => 'hidden',
                 experience => 'advanced',
-                description =>
-'When stored, the value will be converted to uppercase (uc) or lowercase (lc).',
+                description => 'Convert value or index to uppercase (uc) or lowercase (lc).',
                 warp => {
                     follow  => { 't' => '?type' },
                     'rules' => [
-                        '$t eq "leaf"' => {
+                        '$t eq "leaf" or $t eq "hash"' => {
                             choice => [qw/uc lc/],
                             level  => 'normal',
                         }
@@ -326,7 +325,7 @@ my %assert_payload = (
                 level      => 'hidden',
                 experience => 'advanced',
                 description =>
-'Unconditionaly issue a warning with this string when this parameter is used. This should be used mostly with "accept"',
+'Unconditionally issue a warning with this string when this parameter is used. This should be used mostly with "accept"',
                 warp => {
                     follow  => { t              => '?type' },
                     'rules' => [ '$t eq "leaf"' => { level => 'normal', }, ]
