@@ -10,7 +10,7 @@ Configuration classes used by L<Config::Model>
 
 =head2 class
 
-A configuration model is made of several configuration classes. I<< Optional. Type hash of node.  >>
+A configuration model is made of several configuration classes.I<< Optional. Type hash of node.  >>
 
 =head1 SEE ALSO
 
@@ -18,7 +18,7 @@ A configuration model is made of several configuration classes. I<< Optional. Ty
 
 =item *
 
-L<config-edit>
+L<cme>
 
 =item *
 

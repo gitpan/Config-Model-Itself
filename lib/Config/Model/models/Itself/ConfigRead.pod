@@ -20,23 +20,23 @@ Here are some explanations on the possible values:
 
 =over
 
-=item augeas
+=item 'augeas'
 
 Experimental backend with RedHat's Augeas library. See http://augeas.net for details
 
-=item cds_file
+=item 'cds_file'
 
 file with config data string. This is Config::Model own serialisation format, designed to be compact and readable. Configuration filename is made with instance name
 
-=item custom
+=item 'custom'
 
 Custom format. You must specify your own class and method to perform the read or write function. See Config::Model::AutoRead doc for more details
 
-=item ini_file
+=item 'ini_file'
 
 Ini file format. Beware that the structure of your model must match the limitations of the INI file format, i.e only a 2 levels hierarchy. Configuration filename is made with instance name
 
-=item perl_file
+=item 'perl_file'
 
 file with a perl data structure. Configuration filename is made with instance name
 
@@ -130,7 +130,7 @@ I<< Optional. Type boolean. upstream_default: '0'.  >>
 
 =item *
 
-L<config-edit>
+L<cme>
 
 =back
 

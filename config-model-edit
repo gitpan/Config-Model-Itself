@@ -2,31 +2,12 @@
 #
 # This file is part of Config-Model-Itself
 #
-# This software is Copyright (c) 2011 by Dominique Dumont.
+# This software is Copyright (c) 2012 by Dominique Dumont.
 #
 # This is free software, licensed under:
 #
 #   The GNU Lesser General Public License, Version 2.1, February 1999
 #
-
-#    Copyright (c) 2007-2011 Dominique Dumont.
-#
-#    This file is part of Config-Model-Itself.
-#
-#    Config-Model is free software; you can redistribute it and/or
-#    modify it under the terms of the GNU Lesser Public License as
-#    published by the Free Software Foundation; either version 2.1 of
-#    the License, or (at your option) any later version.
-#
-#    Config-Model is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-#    Lesser Public License for more details.
-#
-#    You should have received a copy of the GNU Lesser Public License
-#    along with Config-Model; if not, write to the Free Software
-#    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-#    02110-1301 USA
 
 use strict ;
 use warnings ;
@@ -40,12 +21,8 @@ use YAML::Any;
 use Tk ;
 use Config::Model::TkUI ;
 use Config::Model::Itself::TkEditUI ;
-
-# lame tracing that will be replaced by Log4perl
-use vars qw/$verbose $debug/ ;
-
-$verbose = 0;
-$debug = 0;
+use Path::Class ;
+use lib qw/lib/ ;
 
 my $log4perl_syst_conf_file = '/etc/log4config-model.conf' ;
 my $log4perl_user_conf_file = $ENV{HOME}.'/.log4config-model' ;
@@ -64,12 +41,202 @@ my $log4perl_conf
 
 Log::Log4perl::init($log4perl_conf);
 
-use lib qw/lib/ ;
 
-my $dev_model_dir = 'lib/Config/Model/models/';
+my $dev_model_dir = dir(qw/lib Config Model models/);
 my $root_model ;
 my $trace = 0 ;
 
+
+
+sub load_data {
+    my $load_file = shift ;
+
+    my @data ;
+    if ( $load_file eq '-' ) {
+	@data = <STDIN> ;
+    }
+    else {
+	open(LOAD,$load_file) || die "cannot open load file $load_file:$!";
+	@data = <LOAD> ;
+	close LOAD; 
+    }
+
+    return wantarray ? @data : join('',@data);
+}
+
+my $man = 0;
+my $help = 0;
+my $force_load = 0;
+my $model_dir_path ;
+my $do_dot = 0;
+my $do_dump;
+my $dumptype;
+my $do_yaml = 0;
+my $load_yaml ;
+my $save = 0;
+my $load ;
+# my $model_modified = 0;
+my $open_item = '';
+my $plugin_file = '';
+
+my $result = GetOptions (
+			 "dir=s"            => \$model_dir_path,
+			 "model=s"          => \$root_model,
+			 "man!"             => \$man,
+			 "help!"            => \$help,
+			 "force-load|force_load!"      => \$force_load,
+			 "save!"            => \$save,
+			 "dot-diagram|dot_diagram!"     => \$do_dot ,
+			 "dump!"            => \$do_dump ,
+                         "dumptype:s"       => \$dumptype,
+                         "load=s"           => \$load,
+                         "load-yaml|load_yaml=s"      => \$load_yaml,
+			 "dump-yaml|dump_yaml!"       => \$do_yaml ,
+			 "open-item|open_item=s"      => \$open_item ,
+			 "plugin-file=s"     => \$plugin_file ,
+			);
+
+pod2usage(2) if not $result ;
+pod2usage(1) if $help;
+pod2usage(-verbose => 2) if $man;
+
+Config::Model::Exception::Any->Trace(1) if $trace ;
+
+die "Unspecified root configuration model (option -model)\n"
+  unless defined $root_model ;
+
+my $model_dir = $model_dir_path ? dir(split m!/!, $model_dir_path) : $dev_model_dir ;
+
+if (! -d $model_dir->stat) {
+    $model_dir->mkpath(0, 0755) || die "can't create $model_dir:$!";
+}
+
+my $meta_model = Config::Model -> new();
+
+my $meta_inst = $meta_model->instance(
+    root_class_name => 'Itself::Model',
+    instance_name   => $root_model . ' model',
+    check           => $force_load ? 'no' : 'yes',
+);
+
+my $meta_root = $meta_inst -> config_root ;
+
+my $system_model_dir = $INC{'Config/Model.pm'} ;
+$system_model_dir =~ s/\.pm//;
+$system_model_dir .= '/models' ;
+
+# now load model
+my $rw_obj = Config::Model::Itself -> new(
+    model_object => $meta_root,
+    model_dir    => $plugin_file ? $system_model_dir : $model_dir->stringify,
+) ;
+
+# my $root_model_file = $root_model ;
+# $root_model_file =~ s!::!/!g ;
+
+# if (not -e $read_model_dir.'/'.$root_model_file.'.pl') {
+    # $read_model_dir =  $INC{'Config/Model.pm'} ;
+    # $read_model_dir =~ s/\.pm//;
+    # $read_model_dir .= '/models' ;
+# }
+
+$meta_inst->layered_start if $plugin_file;
+
+$rw_obj->read_all(
+    force_load => $force_load,
+    root_model => $root_model,
+    # legacy     => 'ignore',
+);
+
+if ($plugin_file) {
+    $meta_inst->layered_stop;
+
+    # load any existing plugin file
+    $rw_obj->read_model_snippet(snippet_dir => $model_dir, model_file => $plugin_file) ;
+}
+
+$meta_inst->initial_load_stop ;
+
+if (defined $load) {
+    my $data = load_data($load) ;
+    $data = qq(class:"$root_model" ).$data unless $data =~ /^\s*class:/ ;
+    $meta_root->load($data);
+}
+
+if (defined $load_yaml) {
+    my $yaml = load_data($load_yaml) ;
+    my $pdata = Load($yaml) ;
+    $meta_root->load_data($pdata) ;
+}
+
+if (@ARGV) {
+    my $data = join(' ',@ARGV) ;
+    $data = qq(class:"$root_model" ).$data unless $data =~ /^\s*class:/ ;
+    $meta_root->load($data) ;
+}
+
+if ($do_dot) {
+    print $rw_obj->get_dot_diagram ;
+    exit ;
+}
+
+if (defined $do_dump) {
+    my $dump_string = $meta_root->dump_tree( mode => $dumptype || 'custom' ) ;
+    if ($do_dump) {
+	open(DUMP,">$do_dump") or die "cannot dump in $do_dump:$!";
+	print DUMP $dump_string ;
+	close DUMP;
+    }
+    else {
+	print $dump_string ;
+    }
+    exit ;
+}
+
+if ($do_yaml) {
+    require YAML::Tiny;
+    import YAML::Tiny qw/Dump/;
+    print Dump($meta_root->dump_as_data(ordered_hash_as_list => 0)) ;
+    exit ;
+}
+
+my $write_sub = $plugin_file ? 
+    sub { 
+	$rw_obj->write_model_snippet(snippet_dir => $model_dir, model_file => $plugin_file );
+    }
+    : sub { 
+	my $wr_dir = shift || $model_dir ;
+	$rw_obj->write_all( );
+    } ;
+
+if ($save) {
+    &$write_sub ;
+    exit ;
+}
+
+my $mw = MainWindow-> new ;
+$mw->withdraw ;
+# Thanks to Jerome Quelin for the tip
+$mw->optionAdd('*BorderWidth' => 1);
+
+my $cmu = $mw->ConfigModelEditUI(
+    -root       => $meta_root,
+    -store_sub  => $write_sub,
+    -model_name => $root_model,
+);
+
+if ($open_item) {
+    my $obj = $meta_root->grab($open_item) ;
+    $cmu->force_element_display($obj) ;
+}
+
+&MainLoop ; # Tk's
+
+
+
+__END__
+
+=pod
 
 =head1 NAME
 
@@ -78,6 +245,9 @@ config-model-edit -  Graphical model editor for Config::Model
 =head1 SYNOPSIS
 
   config-model-edit [options] -model Sshd [ class:Sshd element:Foo ... ]
+
+  # plugin mode
+  config-model-edit [options] -model Debian::Dpkg -plugin-file dpkg-snippet.pl
 
 =head1 DESCRIPTION
 
@@ -102,15 +272,8 @@ The model editor program is config-model-edit.
 
 =head1 USAGE
 
-By default, C<config-model-edit> will try to load a model file from
-C<lib/Config/Model/models>. If no model is found, C<config-model-edit>
-will try to load installed models (i.e. located in
-C</usr/share/perl/...>). 
-
-Modified models will be saved (by default) in
-C<$PWD/lib/Config/Model/models/>.
-
-You can override this behavior with option C<-dir>.
+C<config-model-edit> will read and write model file from
+C<./lib/Config/Model/models>. 
 
 When you specify a C<-model> options, only configuration models matching
 this options will be loaded. I.e.
@@ -129,24 +292,31 @@ C<Xorg::Screen> (file C<Xorg/Screen.pl>).
 Mandatory option that specifies the configuration model to be
 edited.
 
-=item -verbose
+=item -plugin-file foo.pl
 
-Be (very) verbose
+this option can be used to create model plugins. A model plugin is an addendum to 
+an existing model. The resulting file will be saved in a C<.d> directory besides the 
+original file to be taken into account. 
 
-=item -debug
+For instance:
 
-Provide debug infos.
+ $ config-model-edit -model Debian::Dpkg -plugin-file my-plugin.pl 
+ # perform additions to Debian::Dpkg and Debian::Dpkg::Control::Source and save
+ $ find lib -name my-plugin.pl
+ lib/Config/Model/models/Debian/Dpkg.d/my-plugin.pl
+ lib/Config/Model/models/Debian/Dpkg/Control/Source.d/my-plugin.pl
+
 
 =item -trace
 
 Provides a full stack trace when exiting on error.
 
-=item -force_load
+=item -force-load
 
 Load file even if error are found in data. Bad data are loaded, but should be cleaned up 
 before saving the model. See menu C<< File -> check >> in the GUI.
 
-=item -dot_diagram
+=item -dot-diagram
 
 Returns a dot file that represent the stucture of the configuration
 model. C<include> are represented by solid lines. Class usage
@@ -174,7 +344,7 @@ typically done with -dump option). This option can be used with
 C<-save> to directly save a model loaded from the cds file or from
 STDIN.
 
-=item -load_yaml <yaml_file_to_load> | -
+=item -load-yaml <yaml_file_to_load> | -
 
 Load configuration data in model from YAML file. This
 option can be used with C<-save> to directly save a model loaded from
@@ -193,7 +363,7 @@ useful to migrate a model when Config::Model model feature changes.
 
 Directory where to read and write model
 
-=item -open_item 'path'
+=item -open-item 'path'
 
 In graphical mode, force the UI to open the node specified. E.g.
 
@@ -201,187 +371,9 @@ In graphical mode, force the UI to open the node specified. E.g.
 
 =back
 
-=cut
-
-sub load_data {
-    my $load_file = shift ;
-
-    my @data ;
-    if ( $load_file eq '-' ) {
-	@data = <STDIN> ;
-    }
-    else {
-	open(LOAD,$load_file) || die "cannot open load file $load_file:$!";
-	@data = <LOAD> ;
-	close LOAD; 
-    }
-
-    return wantarray ? @data : join('',@data);
-}
-
-my $man = 0;
-my $help = 0;
-my $force_load = 0;
-my $model_dir ;
-my $do_dot = 0;
-my $do_dump;
-my $dumptype;
-my $do_yaml = 0;
-my $load_yaml ;
-my $save = 0;
-my $load ;
-my $model_modified = 0;
-my $open_item = '';
-
-my $result = GetOptions (
-			 "dir=s"            => \$model_dir,
-			 "model=s"          => \$root_model,
-			 "verbose!"         => \$verbose,
-			 "debug!"           => \$debug,
-			 "trace!"           => \$trace,
-			 "man!"             => \$man,
-			 "help!"            => \$help,
-			 "force_load!"      => \$force_load,
-			 "save!"            => \$save,
-			 "dot_diagram!"     => \$do_dot ,
-			 "dump!"            => \$do_dump ,
-                         "dumptype:s"       => \$dumptype,
-                         "load=s"           => \$load,
-                         "load_yaml=s"      => \$load_yaml,
-			 "dump_yaml!"       => \$do_yaml ,
-			 "open_item=s"      => \$open_item ,
-			);
-
-pod2usage(2) if not $result ;
-pod2usage(1) if $help;
-pod2usage(-verbose => 2) if $man;
-
-Config::Model::Exception::Any->Trace(1) if $trace ;
-
-die "Unspecified root configuration model (option -model)\n"
-  unless defined $root_model ;
-
-my $wr_model_dir = $model_dir || $dev_model_dir ;
-
-if (! -d $wr_model_dir) {
-    mkdir $wr_model_dir, 0755 || die "can't create $wr_model_dir:$!";
-}
-
-my $meta_model = Config::Model -> new();
-
-my $meta_inst = $meta_model->instance(
-    root_class_name => 'Itself::Model',
-    instance_name   => $root_model . ' model',
-    check           => $force_load ? 'no' : 'yes',
-);
-
-my $meta_root = $meta_inst -> config_root ;
-
-# now load model
-
-my $rw_obj = Config::Model::Itself -> new(model_object => $meta_root ) ;
-
-my $read_model_dir = $model_dir || $dev_model_dir ;
-$read_model_dir =~ s!/$!!;
-
-my $root_model_file = $root_model ;
-$root_model_file =~ s!::!/!g ;
-
-if (not -e $read_model_dir.'/'.$root_model_file.'.pl') {
-    $read_model_dir =  $INC{'Config/Model.pm'} ;
-    $read_model_dir =~ s/\.pm//;
-    $read_model_dir .= '/models' ;
-}
-
-$rw_obj -> read_all( model_dir  => $read_model_dir, 
-		     force_load => $force_load ,
-		     root_model => $root_model,
-		     legacy =>'ignore',
-		   ) ;
-
-$meta_inst->push_no_value_check(qw/store type/) if $force_load ;
-
-if (defined $load) {
-    my $data = load_data($load) ;
-    $meta_root->load($data);
-    $model_modified = 1;
-}
-
-if (defined $load_yaml) {
-    my $yaml = load_data($load_yaml) ;
-    my $pdata = Load($yaml) ;
-    $meta_root->load_data($pdata) ;
-    $model_modified = 1;
-}
-
-if (@ARGV) {
-    $meta_root->load("@ARGV") ;
-    $model_modified = 1;
-}
-
-$meta_inst->pop_no_value_check() if $force_load ;
-
-
-if ($do_dot) {
-    print $rw_obj->get_dot_diagram ;
-    exit ;
-}
-
-if (defined $do_dump) {
-    my $dump_string = $meta_root->dump_tree( mode => $dumptype || 'custom' ) ;
-    if ($do_dump) {
-	open(DUMP,">$do_dump") or die "cannot dump in $do_dump:$!";
-	print DUMP $dump_string ;
-	close DUMP;
-    }
-    else {
-	print $dump_string ;
-    }
-    exit ;
-}
-
-if ($do_yaml) {
-    require YAML::Tiny;
-    import YAML::Tiny qw/Dump/;
-    print Dump($meta_root->dump_as_data(ordered_hash_as_list => 0)) ;
-    exit ;
-}
-
-my $write_sub = sub { 
-    my $wr_dir = shift || $wr_model_dir ;
-    $rw_obj->write_all(model_dir => $wr_dir);
-} ;
-
-if ($save) {
-    &$write_sub ;
-    exit ;
-}
-
-my $mw = MainWindow-> new ;
-$mw->withdraw ;
-# Thanks to Jerome Quelin for the tip
-$mw->optionAdd('*BorderWidth' => 1);
-
-$model_modified = 1 if $wr_model_dir ne $read_model_dir ;
-
-
-my $cmu = $mw->ConfigModelEditUI (-root      => $meta_root,
-				  -store_sub => $write_sub,
-  				  -model_dir => $wr_model_dir,
-				  -model_name => $root_model,
-				  -model_modified => $model_modified,
-				 ) ;
-
-if ($open_item) {
-    my $obj = $meta_root->grab($open_item) ;
-    $cmu->force_element_display($obj) ;
-}
-
-&MainLoop ; # Tk's
-
 =head1 LOGGING
 
-All Config::Model logging is (slowly) moved from klunky debug and
+All Config::Model logging was moved from klunky debug and
 verbose prints to L<Log::Log4perl>. Logging can be configured in the
 following files:
 
@@ -422,4 +414,3 @@ L<Config::Model::WarpedNode>,
 L<Config::Model::Value>
 
 =cut
-

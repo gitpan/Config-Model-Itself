@@ -154,7 +154,7 @@ Warn user if a key is created not matching this regular expression. I<< Optional
 
 =head2 migrate_keys_from
 
-I<< Optional. Type uniline.  >>
+Specifies that the keys of the hash or list are copied from another hash or list in the configuration tree only when the hash is created.I<< Optional. Type uniline.  >>
 
 =head2 ordered
 
@@ -238,7 +238,7 @@ Specify the properties of the configuration element configuration in this hash o
 
 =item *
 
-L<config-edit>
+L<cme>
 
 =item *
 

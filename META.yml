@@ -3,23 +3,28 @@ abstract: 'Model editor for Config::Model'
 author:
   - 'Dominique Dumont'
 build_requires:
+  File::Copy::Recursive: 0
   Module::Build: 0.3601
   Test::Differences: 0
+  Test::File::Contents: 0
   Test::More: 0
+  namespace::autoclean: 0
 configure_requires:
   Module::Build: 0.3601
 dynamic_config: 0
-generated_by: 'Dist::Zilla version 4.300003, CPAN::Meta::Converter version 2.110440'
+generated_by: 'Dist::Zilla version 4.300014, CPAN::Meta::Converter version 2.120921'
 license: lgpl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
 name: Config-Model-Itself
 requires:
-  Config::Model: 1.263
+  Config::Model: 2.009
   Config::Model::TkUI: 1.210
+  Data::Compare: 0
   Log::Log4perl: 0
+  Path::Class: 0
   Pod::POM: 0
   Tk: 0
   YAML::Any: 0
-version: 1.228
+version: 1.229

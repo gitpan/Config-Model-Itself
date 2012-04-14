@@ -1,7 +1,7 @@
 #
 # This file is part of Config-Model-Itself
 #
-# This software is Copyright (c) 2011 by Dominique Dumont.
+# This software is Copyright (c) 2012 by Dominique Dumont.
 #
 # This is free software, licensed under:
 #
@@ -27,7 +27,7 @@
 
 package Config::Model::Itself::TkEditUI ;
 {
-  $Config::Model::Itself::TkEditUI::VERSION = '1.228';
+  $Config::Model::Itself::TkEditUI::VERSION = '1.229';
 }
 
 use strict;
@@ -50,11 +50,9 @@ sub ClassInit {
 sub Populate { 
     my ($cw, $args) = @_;
 
-
     my $model_dir    = delete $args->{-model_dir} ;
     my $model_name   = delete $args->{-model_name} ;
-    my $root_dir     = delete $args->{-root_dir} ;
-    my $modified     = delete $args->{-model_modified} || 0;
+    my $root_dir     = delete $args->{-root_dir} ; # used to test the edited model
 
     $args->{'-title'} ||= "config-model-edit $model_name" ;
 
@@ -68,7 +66,6 @@ sub Populate {
     $cw->{model_dir} = $model_dir ;
     $cw->{model_name} = $model_name ;
     $cw->{root_dir} = $root_dir ;
-    $cw->{modified_data} = $modified ;
 }
 
 sub test_model {

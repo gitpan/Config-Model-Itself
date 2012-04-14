@@ -73,7 +73,7 @@ Specifies names of the elements this configuration class will accept as valid. T
 
 =item *
 
-L<config-edit>
+L<cme>
 
 =item *
 

@@ -1,7 +1,7 @@
 #
 # This file is part of Config-Model-Itself
 #
-# This software is Copyright (c) 2011 by Dominique Dumont.
+# This software is Copyright (c) 2012 by Dominique Dumont.
 #
 # This is free software, licensed under:
 #
@@ -43,17 +43,22 @@ my $build = Module::Build->new
    @version_info,
 
   'build_requires' => {
+    'File::Copy::Recursive' => '0',
     'Module::Build' => '0.3601',
     'Test::Differences' => '0',
-    'Test::More' => '0'
+    'Test::File::Contents' => '0',
+    'Test::More' => '0',
+    'namespace::autoclean' => '0'
   },
   'configure_requires' => {
     'Module::Build' => '0.3601'
   },
   'requires' => {
-    'Config::Model' => '1.263',
+    'Config::Model' => '2.009',
     'Config::Model::TkUI' => '1.210',
+    'Data::Compare' => '0',
     'Log::Log4perl' => '0',
+    'Path::Class' => '0',
     'Pod::POM' => '0',
     'Tk' => '0',
     'YAML::Any' => '0'

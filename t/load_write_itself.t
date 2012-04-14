@@ -1,9 +1,3 @@
-# -*- cperl -*-
-# $Author: ddumont $
-# $Date: 2008-03-07 13:42:08 $
-# $Name: not supported by cvs2svn $
-# $Revision: 1.2 $
-
 use ExtUtils::testlib;
 use Test::More tests => 8;
 use Config::Model;
@@ -39,7 +33,7 @@ mkdir($wr_test) ;
 
 # copy test model
 my $wanted = sub { 
-    return if /svn|data$|~$/ ;
+    return if /data$|~$/ ;
     s!data/!! ;
     -d $File::Find::name && mkpath( ["$wr_test/$_"], 0, 0755) ;
     -f $File::Find::name && copy($File::Find::name,"$wr_test/$_") ;
@@ -54,12 +48,20 @@ ok($inst,"Read Itself::Model and created instance") ;
 
 my $root = $inst -> config_root ;
 
-my $rw_obj = Config::Model::Itself -> new(model_object => $root ) ;
+# copy itself model
+my $model_dir = 'lib/Config/Model/models';
+$wanted = sub { 
+    -d $File::Find::name && mkpath( ["$wr_test/$_"], 0, 0755) ;
+    -f $File::Find::name && copy($File::Find::name,"$wr_test/$_") ;
+};
+find ({ wanted =>$wanted, no_chdir=>1} , $model_dir ) ;
 
-my $model_dir = 'lib/Config/Model/models' ;
-my $map = $rw_obj -> read_all( model_dir => $model_dir,
-			       root_model => 'Itself',
-			     ) ;
+my $rw_obj    = Config::Model::Itself->new(
+    model_dir    => "$wr_test/$model_dir",
+    model_object => $root
+);
+
+my $map = $rw_obj->read_all( root_model => 'Itself' );
 
 ok(1,"Read all models from $model_dir") ;
 
@@ -96,7 +98,7 @@ my $cds3 = $root3 ->dump_tree (full_dump => 1) ;
 
 is($cds3,$cds,"Compared the 3rd full dump with first one") ; 
 
-$rw_obj->write_all( model_dir => 'wr_test' ) ;
+$rw_obj->write_all(  ) ;
 
 # require Tk::ObjScanner; Tk::ObjScanner::scan_object($meta_model) ;
 

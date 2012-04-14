@@ -1,159 +1,84 @@
 #
 # This file is part of Config-Model-Itself
 #
-# This software is Copyright (c) 2011 by Dominique Dumont.
+# This software is Copyright (c) 2012 by Dominique Dumont.
 #
 # This is free software, licensed under:
 #
 #   The GNU Lesser General Public License, Version 2.1, February 1999
 #
-#    Copyright (c) 2007-2011 Dominique Dumont.
-#
-#    This file is part of Config-Model-Itself.
-#
-#    Config-Model-Itself is free software; you can redistribute it and/or
-#    modify it under the terms of the GNU Lesser Public License as
-#    published by the Free Software Foundation; either version 2.1 of
-#    the License, or (at your option) any later version.
-#
-#    Config-Xorg is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-#    Lesser Public License for more details.
-#
-#    You should have received a copy of the GNU Lesser Public License
-#    along with Config-Model; if not, write to the Free Software
-#    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-
 package Config::Model::Itself ;
 {
-  $Config::Model::Itself::VERSION = '1.228';
+  $Config::Model::Itself::VERSION = '1.229';
 }
 
-use strict;
-use warnings ;
-use Carp ;
+use Any::Moose ;
+use namespace::autoclean;
+
 use IO::File ;
 use Log::Log4perl;
+use Carp ;
 use Data::Dumper ;
 use File::Find ;
 use File::Path ;
 use File::Basename ;
+use Data::Compare ;
 
 my $logger = Log::Log4perl::get_logger("Backend::Itself");
 
-=head1 NAME
-
-Config::Model::Itself - Model editor for Config::Model
-
-=head1 SYNOPSIS
-
- my $meta_model = Config::Model -> new ( ) ;
-
- # load Config::Model model
- my $meta_inst = $model->instance (root_class_name => 'Itself::Model' ,
-                                   instance_name   => 'meta_model' ,
-                                  );
-
- my $meta_root = $meta_inst -> config_root ;
-
- # Itself constructor returns an object to read or write the data
- # structure containing the model to be edited
- my $rw_obj = Config::Model::Itself -> new(model_object => $meta_root ) ;
-
- # now lead the model to be edited
- $rw_obj -> read_all( conf_dir => '/path/to/model_files') ;
-
- # For Curses UI prepare a call-back to write model
- my $wr_back = sub { $rw_obj->write_all(model_dir => '/path/to/model_files');
-
- # create Curses user interface
- my $dialog = Config::Model::CursesUI-> new
-      (
-       experience => 'advanced',
-       store => $wr_back,
-      ) ;
-
- # start Curses dialog to edit the mode
- $dialog->start( $meta_model )  ;
-
- # that's it. When user quits curses interface, Curses will call
- # $wr_back sub ref to write the modified model.
-
-=head1 DESCRIPTION
-
-Config::Itself module and its model files provide a model of Config:Model
-(hence the Itself name).
-
-Let's step back a little to explain. Any configuration data is, in
-essence, structured data. This data could be stored in an XML file. A
-configuration model is a way to describe the structure and relation of
-all items of a configuration data set.
-
-This configuration model is also expressed as structured data. This
-structure data is structured and follow a set of rules which are
-described for humans in L<Config::Model>.
-
-The structure and rules documented in L<Config::Model> are also
-expressed in a model in the files provided with
-C<Config::Model::Itself>.
-
-Hence the possibity to verify, modify configuration data provided by
-Config::Model can also be applied on configuration models. Using the
-same user interface.
-
-From a Perl point of view, Config::Model::Itself provides a class
-dedicated to read and write a set of model files.
-
-=head1 Constructor
-
-=head2 new ( model_object => ... )
-
-Creates a new read/write handler. This handler is dedicated to the
-C<model_object> passed with the constructor. This parameter must be a
-L<Config::Model::Node> class.
-
-=cut
 
 # find all .pl file in model_dir and load them...
 
-sub new {
-    my $type = shift ;
-    my %args = @_ ;
+has model_object => (is =>'ro', isa =>'Config::Model::Node', required => 1) ;
+has model_dir    => (is =>'ro', isa =>'Str', required => 1 ) ;
 
-    my $model_obj = $args{model_object}
-      || croak __PACKAGE__," read_all: undefined model object";
+has modifed_classes => (
+    is =>'rw', 
+    isa =>'HashRef[Bool]', 
+    traits => ['Hash'],
+    default => sub { {} } ,
+    handles => {
+        clear_classes => 'clear',
+        set_class => 'set',
+        class_was_changed => 'get' ,
+        classes_to_write => 'keys' ,
+    }
+) ;
 
-     croak __PACKAGE__," read_all: model_object is not a Config::Model::Node object"
-       unless $model_obj->isa("Config::Model::Node");
+sub BUILD {
+    my $self = shift;
 
-    bless { model_object => $model_obj }, $type ;
+    my $cb = sub {
+        my %args = @_ ;
+        return unless $args{name} eq 'class' ;
+        return if $self->class_was_changed($args{index}) ;
+        $logger->info("class $args{index} was modified");
+        
+        $self->add_modified_class($args{index}) ;
+    } ;
+    $self->model_object->instance -> on_change_cb($cb) ;
+    
 }
 
-=head2 Methods
 
-=head1 read_all ( model_dir => ... , root_model => ... , [ force_load => 1 ] )
+sub add_modified_class {
+    my $self = shift;
+    $self->set_class(shift,1) ;
+}
 
-Load all the model files contained in C<model_dir> and all its
-subdirectories. C<root_model> is used to filter the classes read. 
-
-Use C<force_load> if you are trying to load a model containing errors.
-
-C<read_all> returns a hash ref containing ( class_name => file_name , ...)
-
-=cut
 
 sub read_all {
     my $self = shift ;
     my %args = @_ ;
-    my $model_obj = $self->{model_object};
-    my $dir = $args{model_dir} 
-      || croak __PACKAGE__," read_all: undefined model dir";
-    my $model = $args{root_model} 
-      || croak __PACKAGE__," read_all: undefined root_model";
-    my $force_load = $args{force_load} || 0 ;
-    my $legacy = $args{legacy} ;
 
+    my $model = delete $args{root_model} 
+      || croak __PACKAGE__," read_all: undefined root_model";
+    my $force_load = delete $args{force_load} || 0 ;
+    my $legacy = delete $args{legacy} ;
+
+    croak "read_all: unexpected parameters ",join(' ', keys %args) if %args ;
+
+    my $dir = $self->model_dir ;
     unless (-d $dir ) {
         croak __PACKAGE__," read_all: unknown model dir $dir";
     }
@@ -172,7 +97,8 @@ sub read_all {
     } ;
     find ($wanted, $dir ) ;
 
-    my $i = $model_obj->instance ;
+    my $i = $self->model_object->instance ;
+    
     my %read_models ;
     my %pod_data ;
     my %class_file_map ;
@@ -194,7 +120,12 @@ sub read_all {
         # - move experience, description and level status into parameter info.
         foreach my $model_name (@models) {
             # no need to dclone model as Config::Model object is temporary
+            my $raw_model =  $tmp_model -> get_raw_model( $model_name ) ;
             my $new_model =  $tmp_model -> get_model( $model_name ) ;
+
+            # some modifications may be done to cope with older model styles. If a modif
+            # was done, mark the class as changed so it will be saved later
+            $self->add_modified_class($model_name) unless Compare($raw_model, $new_model) ;
 
             foreach my $item (qw/description summary level experience status/) {
                 foreach my $elt_name (keys %{$new_model->{element}}) {
@@ -229,6 +160,7 @@ sub read_all {
 
     # Create all classes listed in %read_models to avoid problems with
     # include statement while calling load_data
+    my $model_obj = $self->model_object ;
     my $class_element = $model_obj->fetch_element('class') ;
     map { $class_element->fetch_with_id($_) } sort keys %read_models ;
 
@@ -284,32 +216,25 @@ sub get_perl_data_model{
     # } 
 
     # don't forget to add name
-    $model->{name} = $class_name ;
+    $model->{name} = $class_name if keys %$model;
 
     return $model ;
 }
 
-=head2 write_all ( model_dir => ... )
-
-Will write back configuration model in the specified directory. The
-structure of the read directory is respected.
-
-=cut
 
 sub write_all {
     my $self = shift ;
     my %args = @_ ;
-    my $model_obj = $self->{model_object} ;
-    my $dir = $args{model_dir} 
-      || croak __PACKAGE__," write_all: undefined model_dir";
+    my $model_obj = $self->model_object ;
+    my $dir = $self->model_dir ;
+
+    croak "write_all: unexpected parameters ",join(' ', keys %args) if %args ;
 
     my $map = $self->{map} ;
 
     unless (-d $dir ) {
         mkpath($dir,0, 0755) || die "Can't mkpath $dir:$!";
     }
-
-    #my $i = $model_obj->instance ;
 
     # get list of all classes loaded by the editor
     my %loaded_classes 
@@ -333,16 +258,25 @@ sub write_all {
     my %map_to_write = (%$map,%new_map) ;
 
     foreach my $file (keys %map_to_write) {
-        $logger->info("writing config file $file");
+        $logger->info("checking model file $file");
 
         my @data ;
         my @notes ;
+        my $file_needs_write = 0;
+        
+        # check if any a class of a file was modified
+        foreach my $class_name (@{$map_to_write{$file}}) {
+            $file_needs_write++ if $self->class_was_changed($class_name) ;
+            $logger->info("file $file class $class_name needs write ",$file_needs_write);
+        }
+        
+        next unless $file_needs_write ;    
 
         foreach my $class_name (@{$map_to_write{$file}}) {
             $logger->info("writing class $class_name");
             my $model 
               = $self-> get_perl_data_model(class_name => $class_name) ;
-            push @data, $model if defined $model;
+            push @data, $model if defined $model and keys %$model;
             
             my $node = $self->{model_object}->grab("class:".$class_name) ;
             push @notes, $node->dump_annotations_as_pod ;
@@ -350,37 +284,127 @@ sub write_all {
             delete $loaded_classes{$class_name} ;
         }
 
-        my $wr_file = "$dir/$file" ;
-        my $wr_dir  = dirname($wr_file) ;
-        unless (-d $wr_dir ) {
-            mkpath($wr_dir,0, 0755) || die "Can't mkpath $wr_dir:$!";
+        next unless @data ; # don't write empty model
+
+        write_model_file ("$dir/$file", \@notes, \@data);
+    }
+    
+    $self->model_object->instance->needs_save(0) ;
+}
+
+sub write_model_snippet {
+    my $self = shift ;
+    my %args = @_ ;
+    my $snippet_dir = delete $args{snippet_dir} 
+      || croak __PACKAGE__," write_model_snippet: undefined snippet_dir";
+    my $model_file = delete $args{model_file} 
+      || croak __PACKAGE__," write_model_snippet: undefined model_file";
+    croak "write_model_snippet: unexpected parameters ",join(' ', keys %args) if %args ;
+
+    my $model = $self->model_object->dump_as_data ;
+    # print (Dumper( $model)) ;
+
+    my @raw_data = @{$model->{class}} ;
+    while (@raw_data) {
+        my ( $class , $data ) = splice @raw_data,0,2 ;
+        $data ->{name} = $class ;
+ 
+        # does not distinguish between notes from underlying model or snipper notes ...
+        my @notes = $self->model_object->grab("class:$class")->dump_annotations_as_pod ;
+        my $class_dir = $class.'.d';
+        $class_dir =~ s!::!/!g;
+        write_model_file ("$snippet_dir/$class_dir/$model_file", \@notes, [ $data ]);
+    }
+
+    $self->model_object->instance->needs_save(0) ;
+}
+
+sub read_model_snippet {
+    my $self = shift ;
+    my %args = @_ ;
+    my $snippet_dir = delete $args{snippet_dir} 
+      || croak __PACKAGE__," write_model_snippet: undefined snippet_dir";
+    my $model_file = delete $args{model_file} 
+      || croak __PACKAGE__," read_model_snippet: undefined model_file";
+
+    croak "read_model_snippet: unexpected parameters ",join(' ', keys %args) if %args ;
+
+    my @files ;
+    my $wanted = sub { 
+        my $n = $File::Find::name ;
+        push @files, $n if (-f $_ and not /~$/ 
+                            and $n !~ /CVS/
+                            and $n !~ m!.(svn|orig|pod)$!
+                            and $n =~ m!\.d/$model_file!
+                           ) ;
+    } ;
+    find ($wanted, $snippet_dir ) ;
+
+    my $class_element = $self->model_object->fetch_element('class') ;
+
+    foreach my $load_file (@files) {
+        $logger->info("trying to read snippet $load_file");
+    
+        my $snippet = do $load_file ;
+
+        unless ($snippet) {
+            if ($@) {die "couldn't parse $load_file: $@"; }
+            elsif (not defined $snippet) {die  "couldn't do $load_file: $!"}
+            else { die  "couldn't run $load_file" ;}
         }
 
-        my $wr = IO::File->new ($wr_file,'>') || croak "Cannot open file $wr_file:$!" ;
+        # there should be only only class in each snippet file
+        foreach my $model (@$snippet) {
+            my $class_name = delete $model->{name} ;
+            # load with a array ref to avoid warnings about missing order
+            $class_element->fetch_with_id($class_name)->load_data( $model ) ;
+        }
 
-        my $dumper = Data::Dumper->new([\@data]) ;
-        $dumper->Indent(1) ; # avoid too deep indentation
-        $dumper->Terse(1) ; # allow unnamed variables in dump
-
-        my $dump = $dumper->Dump;
-        # munge pod text embedded in values to avoid spurious pod formatting
-        $dump =~ s/\n=/\n'.'=/g ;
-
-        $wr->print ( $dump , ";\n\n");
-
-        $wr->print( join("\n",@notes )) ;
-
-        $wr->close ;
+        # load annotations
+        $logger->info("loading annotations from snippet file $load_file");
+        my $fh = IO::File->new($load_file) || die "Can't open $load_file: $!" ;
+        my @lines = $fh->getlines ;  
+        $fh->close;
+        $self->model_object->load_pod_annotation(join('',@lines)) ;
     }
 }
 
 
-=head2 list_class_element
+#
+# New subroutine "write_model_file" extracted - Mon Mar 12 13:38:29 2012.
+#
+sub write_model_file {
+    my $wr_file = shift;
+    my $notes   = shift;
+    my $data    = shift;
 
-Returns a string listing all the class and elements. Useful for
-debugging your configuration model.
+    my $wr_dir = dirname($wr_file);
+    unless ( -d $wr_dir ) {
+        mkpath( $wr_dir, 0, 0755 ) || die "Can't mkpath $wr_dir:$!";
+    }
 
-=cut
+    my $wr = IO::File->new( $wr_file, '>' )
+      || croak "Cannot open file $wr_file:$!" ;
+    $logger->info("in $wr_file");
+
+    my $dumper = Data::Dumper->new( [ \@$data ] );
+    $dumper->Indent(1);    # avoid too deep indentation
+    $dumper->Terse(1);     # allow unnamed variables in dump
+
+    my $dump = $dumper->Dump;
+
+    # munge pod text embedded in values to avoid spurious pod formatting
+    $dump =~ s/\n=/\n'.'=/g;
+
+    $wr->print( $dump, ";\n\n" );
+
+    $wr->print( join( "\n", @$notes ) );
+
+    $wr->close;
+
+}
+
+
 
 sub list_class_element {
     my $self = shift ;
@@ -425,25 +449,6 @@ sub list_one_class_element {
     return $res ;
 }
 
-=head2 get_dot_diagram
-
-Returns a graphviz dot file that represents the strcuture of the
-configuration model:
-
-=over
-
-=item *
-
-C<include> are represented by solid lines
-
-=item *
-
-Class usage (i.e. C<config_class_name> parameter) is represented by
-dashed lines. The name of the element is attached to the dashed line.
-
-=back
-
-=cut
 
 sub get_dot_diagram {
     my $self = shift ;
@@ -516,9 +521,136 @@ sub scan_used_class {
     return $res ;
 }
 
+__PACKAGE__->meta->make_immutable;
+
 1;
 
 __END__
+
+
+
+=pod
+
+=head1 NAME
+
+Config::Model::Itself - Model editor for Config::Model
+
+=head1 SYNOPSIS
+
+ my $meta_model = Config::Model -> new ( ) ;
+
+ # load Config::Model model
+ my $meta_inst = $model->instance (root_class_name => 'Itself::Model' ,
+                                   instance_name   => 'meta_model' ,
+                                  );
+
+ my $meta_root = $meta_inst -> config_root ;
+
+ # Itself constructor returns an object to read or write the data
+ # structure containing the model to be edited
+ my $rw_obj = Config::Model::Itself -> new(model_object => $meta_root ) ;
+
+ # now lead the model to be edited
+ $rw_obj -> read_all( conf_dir => '/path/to/model_files') ;
+
+ # For Curses UI prepare a call-back to write model
+ my $wr_back = sub { $rw_obj->write_all(model_dir => '/path/to/model_files');
+
+ # create Curses user interface
+ my $dialog = Config::Model::CursesUI-> new
+      (
+       experience => 'advanced',
+       store => $wr_back,
+      ) ;
+
+ # start Curses dialog to edit the mode
+ $dialog->start( $meta_model )  ;
+
+ # that's it. When user quits curses interface, Curses will call
+ # $wr_back sub ref to write the modified model.
+
+=head1 DESCRIPTION
+
+Config::Itself module and its model files provide a model of Config:Model
+(hence the Itself name).
+
+Let's step back a little to explain. Any configuration data is, in
+essence, structured data. This data could be stored in an XML file. A
+configuration model is a way to describe the structure and relation of
+all items of a configuration data set.
+
+This configuration model is also expressed as structured data. This
+structure data is structured and follow a set of rules which are
+described for humans in L<Config::Model>.
+
+The structure and rules documented in L<Config::Model> are also
+expressed in a model in the files provided with
+C<Config::Model::Itself>.
+
+Hence the possibity to verify, modify configuration data provided by
+Config::Model can also be applied on configuration models. Using the
+same user interface.
+
+From a Perl point of view, Config::Model::Itself provides a class
+dedicated to read and write a set of model files.
+
+=head1 Constructor
+
+=head2 new ( model_object => ... )
+
+Creates a new read/write handler. This handler is dedicated to the
+C<model_object> passed with the constructor. This parameter must be a
+L<Config::Model::Node> class.
+
+=head2 Methods
+
+=head1 read_all ( model_dir => ... , root_model => ... , [ force_load => 1 ] )
+
+Load all the model files contained in C<model_dir> and all its
+subdirectories. C<root_model> is used to filter the classes read. 
+
+Use C<force_load> if you are trying to load a model containing errors.
+
+C<read_all> returns a hash ref containing ( class_name => file_name , ...)
+
+=head2 write_all ( model_dir => ... )
+
+Will write back configuration model in the specified directory. The
+structure of the read directory is respected.
+
+=head2 write_model_snippet( model_dir => foo, model_file => bar.pl )
+
+Write snippet models in separate C<.d> directory. E.g. a snippet for class
+C<Foo::Bar> will be written in C<Foo/Bar.d/bar.pl> file. This file is to be used
+by L<augment_config_class|Config::Model/"augment_config_class (name => '...', class_data )">
+
+=head2 read_model_snippet( model_dir => foo, model_file => bar.pl )
+
+To read model snippets, this methid will search recursively C<$model_dir> and load
+all C<bar.pl> files found in there.
+
+=head2 list_class_element
+
+Returns a string listing all the class and elements. Useful for
+debugging your configuration model.
+
+=head2 get_dot_diagram
+
+Returns a graphviz dot file that represents the strcuture of the
+configuration model:
+
+=over
+
+=item *
+
+C<include> are represented by solid lines
+
+=item *
+
+Class usage (i.e. C<config_class_name> parameter) is represented by
+dashed lines. The name of the element is attached to the dashed line.
+
+=back
 
 =head1 AUTHOR
 
@@ -538,4 +670,3 @@ it under the LGPL terms.
 L<Config::Model>, L<Config::Model::Node>,
 
 =cut
-
