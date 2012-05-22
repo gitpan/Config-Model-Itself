@@ -52,6 +52,14 @@ Specify an upgrade path from an old value and compute the value to store in the 
 
 Specify how to write a boolean value. Example 'no' 'yes'.I<< Optional. Type list of uniline.  >>
 
+=head2 migrate_values_from
+
+Specifies that the values of the hash or list are copied from another hash or list in the configuration tree once configuration data are loaded.I<< Optional. Type uniline.  >>
+
+=head2 migrate_keys_from
+
+Specifies that the keys of the hash are copied from another hash in the configuration tree only when the hash is created.I<< Optional. Type uniline.  >>
+
 =head2 mandatory
 
 I<< Optional. Type boolean.  >>
@@ -147,10 +155,6 @@ Warn user if a key is created matching this regular expression. I<< Optional. Ty
 =head2 warn_unless_key_match
 
 Warn user if a key is created not matching this regular expression. I<< Optional. Type uniline.  >>
-
-=head2 migrate_keys_from
-
-Specifies that the keys of the hash or list are copied from another hash or list in the configuration tree only when the hash is created.I<< Optional. Type uniline.  >>
 
 =head2 ordered
 
