@@ -40,11 +40,11 @@ insert the included elements after a specific element. I<< Optional. Type refere
 
 =head2 write_config_dir
 
-I<< Optional. Type uniline.  >>
+B<Deprecated> I<< Optional. Type uniline.  >>
 
 =head2 read_config_dir
 
-I<< Optional. Type uniline.  >>
+B<Deprecated> I<< Optional. Type uniline.  >>
 
 =head2 generated_by
 

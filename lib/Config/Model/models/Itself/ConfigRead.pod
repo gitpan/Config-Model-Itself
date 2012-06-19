@@ -10,7 +10,7 @@ Configuration classes used by L<Config::Model>
 
 =head2 syntax
 
-Deprecated parameter that specified the file syntax to store permanently configuration data. Replaced by "backend"I<< Optional. Type enum. choice: 'cds', 'perl', 'ini', 'custom'.  >>
+Deprecated parameter that specified the file syntax to store permanently configuration data. Replaced by "backend"B<Deprecated> I<< Optional. Type enum. choice: 'cds', 'perl', 'ini', 'custom'.  >>
 
 =head2 backend
 
@@ -44,9 +44,13 @@ file with a perl data structure. Configuration filename is made with instance na
 
 
 
+Note: backend is migrated with 'C<$old>' and with $old => "C<- syntax>" and 'C<$replace{cds}>' => "C<cds_file>", 'C<$replace{perl}>' => "C<perl_file>", 'C<$replace{ini}>' => "C<ini_file>"
+
 =head2 file - target configuration file name
 
 specify the configuration file name. This parameter may not be applicable depending on your application. It may also be hardcoded in a custom backend. If not specified, the instance name will be used as base name for your configuration file.I<< Optional. Type uniline.  >>
+
+Note: file is migrated with 'C<$old>' and with $old => "C<- config_file>"
 
 =head2 class
 
@@ -90,7 +94,7 @@ force values to be lowercase. I<< Optional. Type boolean. upstream_default: '0'.
 
 =head2 config_file
 
-Specify the configuration file (without path) that will store configuration information. I<< Optional. Type uniline.  >>
+Specify the configuration file (without path) that will store configuration information. B<Deprecated> I<< Optional. Type uniline.  >>
 
 =head2 full_dump
 
@@ -116,13 +120,17 @@ I<< Optional. Type uniline.  >>
 
 I<< Optional. Type uniline.  >>
 
+Note: config_dir is migrated with 'C<$old>' and with $old => "C<- - read_config_dir>"
+
 =head2 auto_create - Creates configuration files as needed
 
 I<< Optional. Type boolean. upstream_default: '0'.  >>
 
+Note: auto_create is migrated with 'C<$old>' and with $old => "C<- allow_empty>"
+
 =head2 allow_empty - deprecated in favor of auto_create
 
-I<< Optional. Type boolean. upstream_default: '0'.  >>
+B<Deprecated> I<< Optional. Type boolean. upstream_default: '0'.  >>
 
 =head1 SEE ALSO
 

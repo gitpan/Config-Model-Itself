@@ -468,7 +468,7 @@
         name => 'Itself::ConfigAccept',
 
         include       => "Itself::Element",
-        include_after => 'name_match',
+        include_after => 'accept_after',
         'element'     => [
             'name_match' => {
                 type             => 'leaf',
@@ -476,6 +476,14 @@
                 upstream_default => '.*',
                 status           => 'deprecated',
              },
+             'accept_after' => {
+                type => 'leaf',
+                value_type => 'reference' ,
+                refer_to => '- - element' ,
+                description => 'specify where to insert accepted element. This will'
+                 . ' change the behavior but will help generating more consistent '
+                 . ' user interfaces'
+             }
 
         ],
     ],

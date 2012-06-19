@@ -10,7 +10,11 @@ Configuration classes used by L<Config::Model>
 
 =head2 name_match
 
-I<< Optional. Type uniline. upstream_default: '.*'.  >>
+B<Deprecated> I<< Optional. Type uniline. upstream_default: '.*'.  >>
+
+=head2 accept_after
+
+specify where to insert accepted element. This will change the behavior but will help generating more consistent  user interfaces. I<< Optional. Type reference.  >>
 
 =head2 type
 
