@@ -9,7 +9,7 @@
 #
 package Config::Model::Itself ;
 {
-  $Config::Model::Itself::VERSION = '1.232';
+  $Config::Model::Itself::VERSION = '1.234';
 }
 
 use Any::Moose ;
