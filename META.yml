@@ -7,9 +7,14 @@ build_requires:
   Module::Build: 0.3601
   Test::Differences: 0
   Test::File::Contents: 0
+  Test::Memory::Cycle: 0
   Test::More: 0
   namespace::autoclean: 0
 configure_requires:
+  Any::Moose: 0
+  Config::Model: 2.028
+  File::Slurp: 0
+  Log::Log4perl: 1.11
   Module::Build: 0.3601
 dynamic_config: 0
 generated_by: 'Dist::Zilla version 4.300028, CPAN::Meta::Converter version 2.120921'
@@ -19,7 +24,7 @@ meta-spec:
   version: 1.4
 name: Config-Model-Itself
 requires:
-  Config::Model: 2.020
+  Config::Model: 2.028
   Config::Model::TkUI: 1.210
   Data::Compare: 0
   Log::Log4perl: 0
@@ -27,4 +32,8 @@ requires:
   Pod::POM: 0
   Tk: 0
   YAML::Any: 0
-version: 1.234
+resources:
+  bugtracker: http://rt.cpan.org/NoAuth/Bugs.html?Dist=Config-Model-Itself
+  homepage: https://github.com/dod38fr/config-model/wiki
+  repository: git://github.com/dod38fr/config-model-itself.git
+version: 1.235

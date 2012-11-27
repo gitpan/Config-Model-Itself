@@ -1,0 +1,70 @@
+{
+   "abstract" : "Model editor for Config::Model",
+   "author" : [
+      "Dominique Dumont"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Dist::Zilla version 4.300028, CPAN::Meta::Converter version 2.120921",
+   "license" : [
+      "lgpl_2_1"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Config-Model-Itself",
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "File::Copy::Recursive" : "0",
+            "Module::Build" : "0.3601",
+            "Test::Differences" : "0",
+            "Test::File::Contents" : "0",
+            "Test::Memory::Cycle" : "0",
+            "Test::More" : "0",
+            "namespace::autoclean" : "0"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "Any::Moose" : "0",
+            "Config::Model" : "2.028",
+            "File::Slurp" : "0",
+            "Log::Log4perl" : "1.11",
+            "Module::Build" : "0.3601"
+         }
+      },
+      "develop" : {
+         "requires" : {
+            "Test::Pod" : "1.41"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Config::Model" : "2.028",
+            "Config::Model::TkUI" : "1.210",
+            "Data::Compare" : "0",
+            "Log::Log4perl" : "0",
+            "Path::Class" : "0",
+            "Pod::POM" : "0",
+            "Tk" : "0",
+            "YAML::Any" : "0"
+         }
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "mailto" : "bug-project@rt.cpan.org",
+         "web" : "http://rt.cpan.org/NoAuth/Bugs.html?Dist=Config-Model-Itself"
+      },
+      "homepage" : "https://github.com/dod38fr/config-model/wiki",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/dod38fr/config-model-itself.git",
+         "web" : "http://github.com/dod38fr/config-model-itself"
+      }
+   },
+   "version" : "1.235"
+}
+

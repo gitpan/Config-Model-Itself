@@ -2,6 +2,7 @@ Build.PL
 ChangeLog
 LICENSE
 MANIFEST
+META.json
 META.yml
 README
 augeas_box/etc/ssh/sshd_config
@@ -21,19 +22,11 @@ lib/Config/Model/models/Itself/CargoElement.pl
 lib/Config/Model/models/Itself/CargoWarpRule.pl
 lib/Config/Model/models/Itself/CargoWarpValue.pl
 lib/Config/Model/models/Itself/Class.pl
-lib/Config/Model/models/Itself/Class.pod
 lib/Config/Model/models/Itself/CommonElement.pl
-lib/Config/Model/models/Itself/CommonElement/Assert.pod
-lib/Config/Model/models/Itself/CommonElement/WarnIfMatch.pod
 lib/Config/Model/models/Itself/ComputedValue.pl
-lib/Config/Model/models/Itself/ConfigAccept.pod
-lib/Config/Model/models/Itself/ConfigRead.pod
-lib/Config/Model/models/Itself/ConfigWrite.pod
 lib/Config/Model/models/Itself/Element.pl
-lib/Config/Model/models/Itself/Element.pod
 lib/Config/Model/models/Itself/MigratedValue.pl
 lib/Config/Model/models/Itself/Model.pl
-lib/Config/Model/models/Itself/Model.pod
 lib/Config/Model/models/Itself/NonWarpableElement.pl
 lib/Config/Model/models/Itself/WarpOnlyElement.pl
 lib/Config/Model/models/Itself/WarpRule.pl

@@ -27,7 +27,7 @@
 
 package Config::Model::Itself::TkEditUI ;
 {
-  $Config::Model::Itself::TkEditUI::VERSION = '1.234';
+  $Config::Model::Itself::TkEditUI::VERSION = '1.235';
 }
 
 use strict;
@@ -78,6 +78,9 @@ sub test_model {
 
     # need to read test model from where it was written...
     my $model = Config::Model -> new(model_dir => $cw->{model_dir}) ;
+
+    # keep a reference on this object, otherwise it will vanish at the end of this block.
+    $cw->{test_model} =  $model ;
 
     my $name = $cw->{model_name};
     my $inst = $model->instance (root_class_name => $name,
