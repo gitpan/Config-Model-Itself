@@ -6,6 +6,10 @@ use Config::Model;
 use Log::Log4perl qw(:easy) ;
 use Data::Dumper ;
 use Config::Model::Itself ;
+
+use AnyEvent ;
+require AnyEvent::Impl::Tk ;
+
 use Tk ;
 use File::Path ;
 use File::Copy ;
@@ -23,8 +27,6 @@ $File::Copy::Recursive::DirPerms = 0755;
 my ($log,$show) = (0) x 2 ;
 my $arg = $ARGV[0] || '' ;
 my $trace = $arg =~ /t/ ? 1 : 0 ;
-$::verbose          = 1 if $arg =~ /v/;
-$::debug            = 1 if $arg =~ /d/;
 $log                = 1 if $arg =~ /l/;
 $show               = 1 if $arg =~ /[si]/;
 
@@ -60,11 +62,11 @@ plan tests => 15 ; # avoid double print of plan when exec is run
 
 my $log4perl_user_conf_file = $ENV{HOME}.'/.log4config-model' ;
 
-if (-e $log4perl_user_conf_file ) {
+if ($log and -e $log4perl_user_conf_file ) {
     Log::Log4perl::init($log4perl_user_conf_file);
 }
 else {
-    Log::Log4perl->easy_init($arg =~ /l/ ? $DEBUG: $WARN);
+    Log::Log4perl->easy_init($ERROR);
 }
 
 my $meta_model = Config::Model -> new ( ) ;
@@ -133,7 +135,7 @@ ok(1,"Read all models in data dir") ;
 
 SKIP: {
 
-    my $mw = eval {MainWindow-> new ; };
+    my $mw = eval { $AnyEvent::Impl::Tk::mw  ; };
 
     # cannot create Tk window
     skip "Cannot create Tk window",8 if $@;

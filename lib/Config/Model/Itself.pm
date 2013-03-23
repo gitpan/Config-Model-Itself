@@ -9,7 +9,7 @@
 #
 package Config::Model::Itself ;
 {
-  $Config::Model::Itself::VERSION = '1.235';
+  $Config::Model::Itself::VERSION = '1.236';
 }
 
 use Any::Moose ;
@@ -170,7 +170,10 @@ sub read_all {
 
     $logger->info("loading all extracted data in Config::Model::Itself");
     # load with a array ref to avoid warnings about missing order
-    $model_obj->load_data( {class => [ %read_models ] }, undef, $force_load ? 'no' : 'yes' ) ;
+    $model_obj->load_data(
+        data => {class => [ %read_models ] },
+        check => $force_load ? 'no' : 'yes'
+    ) ;
 
     # load annotations
     for my $file (@files) {

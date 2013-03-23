@@ -71,13 +71,14 @@ my $build = $class->new
   },
   'configure_requires' => {
     'Any::Moose' => '0',
-    'Config::Model' => '2.028',
+    'Config::Model' => '2.030',
     'File::Slurp' => '0',
     'Log::Log4perl' => '1.11',
     'Module::Build' => '0.3601'
   },
   'requires' => {
-    'Config::Model' => '2.028',
+    'AnyEvent' => '0',
+    'Config::Model' => '2.030',
     'Config::Model::TkUI' => '1.210',
     'Data::Compare' => '0',
     'Log::Log4perl' => '0',
