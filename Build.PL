@@ -1,13 +1,13 @@
 #
 # This file is part of Config-Model-Itself
 #
-# This software is Copyright (c) 2012 by Dominique Dumont.
+# This software is Copyright (c) 2013 by Dominique Dumont.
 #
 # This is free software, licensed under:
 #
 #   The GNU Lesser General Public License, Version 2.1, February 1999
 #
-#    Copyright (c) 2009-2012 Dominique Dumont.
+#    Copyright (c) 2009-2013 Dominique Dumont.
 #
 #    This file is part of Config-Model-Itself.
 #
@@ -27,7 +27,6 @@
 #    02110-1301 USA
 
 use Module::Build;
-use Data::Dumper ;
 
 use warnings FATAL => qw(all) ;
 use strict ;
@@ -70,7 +69,6 @@ my $build = $class->new
     'namespace::autoclean' => '0'
   },
   'configure_requires' => {
-    'Any::Moose' => '0',
     'Config::Model' => '2.030',
     'File::Slurp' => '0',
     'Log::Log4perl' => '1.11',
@@ -82,6 +80,7 @@ my $build = $class->new
     'Config::Model::TkUI' => '1.210',
     'Data::Compare' => '0',
     'Log::Log4perl' => '0',
+    'Mouse' => '0',
     'Path::Class' => '0',
     'Pod::POM' => '0',
     'Tk' => '0',

@@ -4,7 +4,7 @@
       "Dominique Dumont"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.300030, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "Dist::Zilla version 4.300033, CPAN::Meta::Converter version 2.120921",
    "license" : [
       "lgpl_2_1"
    ],
@@ -27,7 +27,6 @@
       },
       "configure" : {
          "requires" : {
-            "Any::Moose" : "0",
             "Config::Model" : "2.030",
             "File::Slurp" : "0",
             "Log::Log4perl" : "1.11",
@@ -46,6 +45,7 @@
             "Config::Model::TkUI" : "1.210",
             "Data::Compare" : "0",
             "Log::Log4perl" : "0",
+            "Mouse" : "0",
             "Path::Class" : "0",
             "Pod::POM" : "0",
             "Tk" : "0",
@@ -66,6 +66,6 @@
          "web" : "http://github.com/dod38fr/config-model-itself"
       }
    },
-   "version" : "1.236"
+   "version" : "1.237"
 }
 

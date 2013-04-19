@@ -14,15 +14,11 @@ Deprecated parameter that specified the file syntax to store permanently configu
 
 =head2 backend
 
-specifies the backend to store permanently configuration data.I<< Optional. Type enum. choice: 'cds_file', 'perl_file', 'ini_file', 'augeas', 'custom'.  >>
+specifies the backend to store permanently configuration data.I<< Optional. Type enum. choice: 'cds_file', 'perl_file', 'ini_file', 'custom'.  >>
 
 Here are some explanations on the possible values:
 
 =over
-
-=item 'augeas'
-
-Experimental backend with RedHat's Augeas library. See http://augeas.net for details
 
 =item 'cds_file'
 
@@ -55,10 +51,6 @@ Note: file is migrated with 'C<$old>' and with $old => "C<- config_file>"
 =head2 class
 
 I<< Optional. Type uniline.  >>
-
-=head2 save
-
-Specify how to save the configuration file. Either create a newfile (with extension .augnew, and do not overwrite the original file) or move the original file into a backup file (.augsave extension). Configuration files are overwritten by default. I<< Optional. Type enum. choice: 'backup', 'newfile'.  >>
 
 =head2 store_class_in_hash
 
@@ -103,14 +95,6 @@ Also dump default values in the data structure. Useful if the dumped configurati
 =head2 comment_delimiter
 
 comment starts with this character. I<< Optional. Type uniline. upstream_default: '#'.  >>
-
-=head2 set_in
-
-Sometimes, the structure of a file loaded by Augeas starts directly with a list of items. For instance, /etc/hosts structure starts with a list of lines that specify hosts and IP addresses. This parameter specifies an element name in Config::Model root class that will hold the configuration data retrieved by Augeas. I<< Optional. Type reference.  >>
-
-=head2 sequential_lens
-
-List of hash or list Augeas lenses where value are stored in sequential Augeas nodes. See Config::Model::Backend::Augeas for details.I<< Optional. Type list of uniline.  >>
 
 =head2 function
 

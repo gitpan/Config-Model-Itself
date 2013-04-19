@@ -1,7 +1,7 @@
 #
 # This file is part of Config-Model-Itself
 #
-# This software is Copyright (c) 2012 by Dominique Dumont.
+# This software is Copyright (c) 2013 by Dominique Dumont.
 #
 # This is free software, licensed under:
 #
@@ -9,10 +9,10 @@
 #
 package Config::Model::Itself ;
 {
-  $Config::Model::Itself::VERSION = '1.236';
+  $Config::Model::Itself::VERSION = '1.237';
 }
 
-use Any::Moose ;
+use Mouse ;
 use namespace::autoclean;
 
 use IO::File ;
@@ -112,6 +112,8 @@ sub read_all {
         # - translate legacy warp parameters
         # - expand elements name
         my $tmp_model = Config::Model -> new( skip_include => 1, legacy => $legacy ) ;
+        # @models order is important to write configuration class back in the same
+        # order as the declaration
         my @models = $tmp_model -> load ( 'Tmp' , $file ) ;
 
         my $rel_file = $file ;

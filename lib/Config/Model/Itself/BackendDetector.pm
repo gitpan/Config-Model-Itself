@@ -1,13 +1,13 @@
 #
 # This file is part of Config-Model-Itself
 #
-# This software is Copyright (c) 2012 by Dominique Dumont.
+# This software is Copyright (c) 2013 by Dominique Dumont.
 #
 # This is free software, licensed under:
 #
 #   The GNU Lesser General Public License, Version 2.1, February 1999
 #
-#    Copyright (c) 2010 Dominique Dumont.
+#    Copyright (c) 2010-2013 Dominique Dumont.
 #
 #    This file is part of Config-Model-Itself.
 #
@@ -27,7 +27,7 @@
 
 package Config::Model::Itself::BackendDetector ;
 {
-  $Config::Model::Itself::BackendDetector::VERSION = '1.236';
+  $Config::Model::Itself::BackendDetector::VERSION = '1.237';
 }
 
 use Pod::POM ;
@@ -40,7 +40,11 @@ use warnings ;
 
 sub setup_enum_choice {
     my $self = shift ;
-    my @choices = ref $_[0] ? @{$_[0]} : @_ ;
+
+    # using a hash to make sure that a backend is not listed twice. This may
+    # happen in development environment where a backend in found in /usr/lib
+    # and in ./lib (or ./blib)
+    my %choices = map { ($_ => 1);} ref $_[0] ? @{$_[0]} : @_ ;
 
     # find available backends in all @INC directories
     my $wanted = sub { 
@@ -48,7 +52,7 @@ sub setup_enum_choice {
         if (-f $_ and $n =~ s/\.pm$// and $n !~ /Any$/) {
 	    $n =~ s!.*Backend/!! ;
 	    $n =~ s!/!::!g ;
-	    push @choices , $n ;
+	    $choices{$n} = 1 ;
         }
     } ;
 
@@ -57,7 +61,7 @@ sub setup_enum_choice {
         find ($wanted, $path ) if -d $path;
     }
     
-    $self->SUPER::setup_enum_choice(@choices) ;
+    $self->SUPER::setup_enum_choice(sort keys %choices) ;
 }
 
 sub set_help {
@@ -123,14 +127,13 @@ Config::Model::Itself::BackendDetector - Detect available read/write backends
                       class => 'Config::Model::Itself::BackendDetector' ,
                       value_type => 'enum',
                       # specify backends built in Config::Model
-                      choice => [qw/cds_file perl_file ini_file augeas custom/],
+                      choice => [qw/cds_file perl_file ini_file custom/],
 
                       help => {
                                cds_file => "file ...",
                                ini_file => "Ini file ...",
                                perl_file => "file  perl",
                                custom => "Custom format",
-                               augeas => "Experimental backend",
                               }
                     }
       ],
