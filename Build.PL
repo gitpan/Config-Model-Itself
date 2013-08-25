@@ -69,14 +69,14 @@ my $build = $class->new
     'namespace::autoclean' => '0'
   },
   'configure_requires' => {
-    'Config::Model' => '2.030',
+    'Config::Model' => '2.039',
     'File::Slurp' => '0',
     'Log::Log4perl' => '1.11',
     'Module::Build' => '0.3601'
   },
   'requires' => {
     'AnyEvent' => '0',
-    'Config::Model' => '2.030',
+    'Config::Model' => '2.039',
     'Config::Model::TkUI' => '1.210',
     'Data::Compare' => '0',
     'Log::Log4perl' => '0',

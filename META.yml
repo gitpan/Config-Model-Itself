@@ -11,12 +11,12 @@ build_requires:
   Test::More: 0
   namespace::autoclean: 0
 configure_requires:
-  Config::Model: 2.030
+  Config::Model: 2.039
   File::Slurp: 0
   Log::Log4perl: 1.11
   Module::Build: 0.3601
 dynamic_config: 0
-generated_by: 'Dist::Zilla version 4.300033, CPAN::Meta::Converter version 2.120921'
+generated_by: 'Dist::Zilla version 4.300034, CPAN::Meta::Converter version 2.132140'
 license: lgpl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -24,7 +24,7 @@ meta-spec:
 name: Config-Model-Itself
 requires:
   AnyEvent: 0
-  Config::Model: 2.030
+  Config::Model: 2.039
   Config::Model::TkUI: 1.210
   Data::Compare: 0
   Log::Log4perl: 0
@@ -37,4 +37,4 @@ resources:
   bugtracker: http://rt.cpan.org/NoAuth/Bugs.html?Dist=Config-Model-Itself
   homepage: https://github.com/dod38fr/config-model/wiki
   repository: git://github.com/dod38fr/config-model-itself.git
-version: 1.237
+version: 1.238

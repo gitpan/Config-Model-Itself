@@ -9,7 +9,7 @@
 #
 package Config::Model::Itself ;
 {
-  $Config::Model::Itself::VERSION = '1.237';
+  $Config::Model::Itself::VERSION = '1.238';
 }
 
 use Mouse ;
