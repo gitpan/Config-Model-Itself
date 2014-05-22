@@ -1,35 +1,14 @@
 #
 # This file is part of Config-Model-Itself
 #
-# This software is Copyright (c) 2013 by Dominique Dumont.
+# This software is Copyright (c) 2014 by Dominique Dumont.
 #
 # This is free software, licensed under:
 #
 #   The GNU Lesser General Public License, Version 2.1, February 1999
 #
-#    Copyright (c) 2010-2013 Dominique Dumont.
-#
-#    This file is part of Config-Model-Itself.
-#
-#    Config-Model-Itself is free software; you can redistribute it and/or
-#    modify it under the terms of the GNU Lesser Public License as
-#    published by the Free Software Foundation; either version 2.1 of
-#    the License, or (at your option) any later version.
-#
-#    Config-Xorg is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-#    Lesser Public License for more details.
-#
-#    You should have received a copy of the GNU Lesser Public License
-#    along with Config-Model; if not, write to the Free Software
-#    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-
 package Config::Model::Itself::BackendDetector ;
-{
-  $Config::Model::Itself::BackendDetector::VERSION = '1.239';
-}
-
+$Config::Model::Itself::BackendDetector::VERSION = '1.240';
 use Pod::POM ;
 use File::Find ;
 
@@ -105,11 +84,21 @@ sub set_help {
 
 1;
 
+# ABSTRACT:  Detect available read/write backends usable by config models
+
 __END__
+
+=pod
+
+=encoding UTF-8
 
 =head1 NAME
 
-Config::Model::Itself::BackendDetector - Detect available read/write backends
+Config::Model::Itself::BackendDetector - Detect available read/write backends usable by config models
+
+=head1 VERSION
+
+version 1.240
 
 =head1 SYNOPSIS
 
@@ -145,7 +134,6 @@ Config::Model::Itself::BackendDetector - Detect available read/write backends
 
   my @choices = $backend->get_choice ;
 
-
 =head1 DESCRIPTION
 
 This class is derived from L<Config::Model::Value>. It is designed to
@@ -157,13 +145,20 @@ This module will detect available plugin backend and query their pod
 documentation to provide a contextual help for config-model graphical
 editor.
 
-=head1 AUTHOR
-
-Dominique Dumont, (ddumont at cpan dot org)
-
 =head1 SEE ALSO
 
 L<Config::Model>, L<Config::Model::Node>, L<Config::Model::Value>
 
-=cut
+=head1 AUTHOR
 
+Dominique Dumont
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is Copyright (c) 2014 by Dominique Dumont.
+
+This is free software, licensed under:
+
+  The GNU Lesser General Public License, Version 2.1, February 1999
+
+=cut

@@ -1,22 +1,19 @@
 #
 # This file is part of Config-Model-Itself
 #
-# This software is Copyright (c) 2013 by Dominique Dumont.
+# This software is Copyright (c) 2014 by Dominique Dumont.
 #
 # This is free software, licensed under:
 #
 #   The GNU Lesser General Public License, Version 2.1, February 1999
 #
 package Config::Model::Itself ;
-{
-  $Config::Model::Itself::VERSION = '1.239';
-}
-
+$Config::Model::Itself::VERSION = '1.240';
 use Mouse ;
-use namespace::autoclean;
+use Config::Model 2.055;
 
 use IO::File ;
-use Log::Log4perl;
+use Log::Log4perl 1.11;
 use Carp ;
 use Data::Dumper ;
 use File::Find ;
@@ -177,13 +174,26 @@ sub read_all {
         check => $force_load ? 'no' : 'yes'
     ) ;
 
-    # load annotations
+    # load annotations and comment header
     for my $file (@files) {
         $logger->info("loading annotations from file $file");
         my $fh = IO::File->new($file) || die "Can't open $file: $!" ;
         my @lines = $fh->getlines ;  
         $fh->close;
         $model_obj->load_pod_annotation(join('',@lines)) ;
+
+        my @headers ;
+        foreach my $l (@lines) {
+            if ($l =~ /^\s*#/ or $l =~ /^\s*$/){
+                push @headers, $l
+            }
+            else {
+                last;
+            }
+        }
+        my $rel_file = $file ;
+        $rel_file =~ s/^$dir\/?//;
+        $self->{header}{$rel_file} = \@headers;
     }
 
     return $self->{map} = \%class_file_map ;
@@ -209,18 +219,6 @@ sub get_perl_data_model{
     # now apply some translation to read model
     # - Do NOT translate legacy warp parameters
     # - Do not compact elements name
-
-    # - move experience, description and level status back in class info.
-    # my $all_elt_data = $model->{element} || [] ;
-    # for (my $i = 0 ; $i < @$all_elt_data; $i ++) {
-    # 	my $elt_name = $all_elt_data->[$i++] ;
-    # 	my $elt_data = $all_elt_data->[$i] ;
-    # 	foreach my $item (qw/description/) {
-    # 	    my $moved_data = delete $elt_data->{$item}  ;
-    # 	    next unless defined $moved_data ;
-    # 	    push @{$model->{$item}}, $elt_name, $moved_data ; 
-    # 	}
-    # } 
 
     # don't forget to add name
     $model->{name} = $class_name if keys %$model;
@@ -293,7 +291,7 @@ sub write_all {
 
         next unless @data ; # don't write empty model
 
-        write_model_file ("$dir/$file", \@notes, \@data);
+        write_model_file ("$dir/$file", $self->{header}{$file}, \@notes, \@data);
     }
     
     $self->model_object->instance->clear_changes ;
@@ -320,7 +318,7 @@ sub write_model_snippet {
         my @notes = $self->model_object->grab("class:$class")->dump_annotations_as_pod ;
         my $class_dir = $class.'.d';
         $class_dir =~ s!::!/!g;
-        write_model_file ("$snippet_dir/$class_dir/$model_file", \@notes, [ $data ]);
+        write_model_file ("$snippet_dir/$class_dir/$model_file", [], \@notes, [ $data ]);
     }
 
     $self->model_object->instance->clear_changes ;
@@ -381,9 +379,10 @@ sub read_model_snippet {
 # New subroutine "write_model_file" extracted - Mon Mar 12 13:38:29 2012.
 #
 sub write_model_file {
-    my $wr_file = shift;
-    my $notes   = shift;
-    my $data    = shift;
+    my $wr_file  = shift;
+    my $comments = shift ;
+    my $notes    = shift;
+    my $data     = shift;
 
     my $wr_dir = dirname($wr_file);
     unless ( -d $wr_dir ) {
@@ -404,6 +403,7 @@ sub write_model_file {
     # munge pod text embedded in values to avoid spurious pod formatting
     $dump =~ s/\n=/\n'.'=/g;
 
+    $wr->print(@$comments) ;
     $wr->print( $dump, ";\n\n" );
 
     $wr->print( join( "\n", @$notes ) );
@@ -533,15 +533,22 @@ __PACKAGE__->meta->make_immutable;
 
 1;
 
+
+# ABSTRACT: Model editor for Config::Model
+
 __END__
 
-
-
 =pod
+
+=encoding UTF-8
 
 =head1 NAME
 
 Config::Model::Itself - Model editor for Config::Model
+
+=head1 VERSION
+
+version 1.240
 
 =head1 SYNOPSIS
 
@@ -571,7 +578,6 @@ Config::Model::Itself - Model editor for Config::Model
  # create Curses user interface
  my $dialog = Config::Model::CursesUI-> new
       (
-       experience => 'advanced',
        store => $wr_back,
       ) ;
 
@@ -664,21 +670,20 @@ dashed lines. The name of the element is attached to the dashed line.
 
 =back
 
-=head1 AUTHOR
-
-Dominique Dumont, (ddumont at cpan dot org)
-
-=head1 COPYRIGHT
-
-Copyright (C) 2007-2012 by Dominique Dumont
-
-=head1 LICENSE
-
-This library is free software; you can redistribute it and/or modify
-it under the LGPL terms.
-
 =head1 SEE ALSO
 
 L<Config::Model>, L<Config::Model::Node>,
+
+=head1 AUTHOR
+
+Dominique Dumont
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is Copyright (c) 2014 by Dominique Dumont.
+
+This is free software, licensed under:
+
+  The GNU Lesser General Public License, Version 2.1, February 1999
 
 =cut

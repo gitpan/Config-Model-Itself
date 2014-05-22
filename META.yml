@@ -3,38 +3,43 @@ abstract: 'Model editor for Config::Model'
 author:
   - 'Dominique Dumont'
 build_requires:
-  File::Copy::Recursive: 0
-  Module::Build: 0.3601
-  Test::Differences: 0
-  Test::File::Contents: 0
-  Test::Memory::Cycle: 0
-  Test::More: 0
-  namespace::autoclean: 0
+  File::Copy: '0'
+  File::Copy::Recursive: '0'
+  Module::Build: '0.34'
+  Test::Differences: '0'
+  Test::File::Contents: '0'
+  Test::Memory::Cycle: '0'
+  Test::More: '0'
+  Tk: '0'
 configure_requires:
-  Config::Model: 2.039
-  File::Slurp: 0
-  Log::Log4perl: 1.11
-  Module::Build: 0.3601
+  Module::Build: '0.34'
 dynamic_config: 0
-generated_by: 'Dist::Zilla version 4.300034, CPAN::Meta::Converter version 2.132140'
+generated_by: 'Dist::Zilla version 5.016, CPAN::Meta::Converter version 2.141170'
 license: lgpl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
-  version: 1.4
+  version: '1.4'
 name: Config-Model-Itself
 requires:
-  AnyEvent: 0
-  Config::Model: 2.039
-  Config::Model::TkUI: 1.210
-  Data::Compare: 0
-  Log::Log4perl: 0
-  Mouse: 0
-  Path::Class: 0
-  Pod::POM: 0
-  Tk: 0
-  YAML::Any: 0
+  Carp: '0'
+  Config::Model: '2.055'
+  Config::Model::TkUI: '1.210'
+  Config::Model::Value: '0'
+  Data::Compare: '0'
+  Data::Dumper: '0'
+  File::Basename: '0'
+  File::Find: '0'
+  File::Path: '0'
+  IO::File: '0'
+  Log::Log4perl: '1.11'
+  Mouse: '0'
+  Path::Tiny: '0'
+  Pod::POM: '0'
+  Tk: '0'
+  YAML::Any: '0'
+  perl: '5.010'
 resources:
   bugtracker: http://rt.cpan.org/NoAuth/Bugs.html?Dist=Config-Model-Itself
   homepage: https://github.com/dod38fr/config-model/wiki
   repository: git://github.com/dod38fr/config-model-itself.git
-version: 1.239
+version: '1.240'

@@ -2,7 +2,7 @@
 #
 # This file is part of Config-Model-Itself
 #
-# This software is Copyright (c) 2013 by Dominique Dumont.
+# This software is Copyright (c) 2014 by Dominique Dumont.
 #
 # This is free software, licensed under:
 #
@@ -109,7 +109,6 @@
 
     [
         name              => 'MasterModel',
-        permission        => [ [qw/tree_macro/] => 'advanced' ],
         class_description => "Master description",
         level             => [ [qw/hash_a tree_macro int_v/] => 'important' ],
 

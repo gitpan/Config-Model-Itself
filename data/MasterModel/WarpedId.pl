@@ -1,7 +1,7 @@
 #
 # This file is part of Config-Model-Itself
 #
-# This software is Copyright (c) 2013 by Dominique Dumont.
+# This software is Copyright (c) 2014 by Dominique Dumont.
 #
 # This is free software, licensed under:
 #
@@ -67,8 +67,7 @@
                 type       => 'hash',
                 index_type => 'string',
                 cargo_type => 'leaf',
-                level      => 'hidden'
-                ,    # must also accept level permission and description here
+                level      => 'hidden',
                 warp => {
                     follow  => '- macro',
                     'rules' => { 'A' => { level => 'normal', }, }

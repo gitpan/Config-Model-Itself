@@ -1,3 +1,5 @@
+# PODNAME: Config::Model::models::Itself::CommonElement::WarnIfMatch
+# ABSTRACT:  Configuration class Itself::CommonElement::WarnIfMatch
 =head1 NAME
 
 Config::Model::models::Itself::CommonElement::WarnIfMatch - Configuration class Itself::CommonElement::WarnIfMatch

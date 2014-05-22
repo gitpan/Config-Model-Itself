@@ -1,7 +1,7 @@
 #
 # This file is part of Config-Model-Itself
 #
-# This software is Copyright (c) 2013 by Dominique Dumont.
+# This software is Copyright (c) 2014 by Dominique Dumont.
 #
 # This is free software, licensed under:
 #
@@ -59,6 +59,7 @@
            value_type => 'enum', 
            choice => [qw/master advanced beginner/] ,
            upstream_default => 'beginner',
+           status => 'deprecated',
            description => 'Used to categorize configuration elements in several "required skills". Use this feature if you need to hide a parameter to novice users',
           },
 
@@ -89,7 +90,6 @@
       'warp' 
       => { type => 'warped_node' , # ?
            level => 'hidden',
-           experience => 'advanced',
            follow => { elt_type => '- type' } ,
            rules  => [
                       '$elt_type ne "node"' =>

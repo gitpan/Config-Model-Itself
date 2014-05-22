@@ -1,7 +1,7 @@
 #
 # This file is part of Config-Model-Itself
 #
-# This software is Copyright (c) 2013 by Dominique Dumont.
+# This software is Copyright (c) 2014 by Dominique Dumont.
 #
 # This is free software, licensed under:
 #
@@ -26,10 +26,7 @@
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 
 package Config::Model::Itself::TkEditUI ;
-{
-  $Config::Model::Itself::TkEditUI::VERSION = '1.239';
-}
-
+$Config::Model::Itself::TkEditUI::VERSION = '1.240';
 use strict;
 use warnings ;
 use Carp ;

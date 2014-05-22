@@ -1,3 +1,5 @@
+# PODNAME: Config::Model::models::Itself::ConfigAccept
+# ABSTRACT:  Configuration class Itself::ConfigAccept
 =head1 NAME
 
 Config::Model::models::Itself::ConfigAccept - Configuration class Itself::ConfigAccept
@@ -82,11 +84,11 @@ Specify the possible values. I<< Optional. Type list of uniline.  >>
 
 =head2 min
 
-minimum value. I<< Optional. Type integer.  >> 
+minimum value. I<< Optional. Type number.  >> 
 
 =head2 max
 
-maximum value. I<< Optional. Type integer.  >> 
+maximum value. I<< Optional. Type number.  >> 
 
 =head2 min_index
 
@@ -210,7 +212,7 @@ I<< Optional. Type enum. choice: 'obsolete', 'deprecated', 'standard'. upstream_
 
 =head2 experience
 
-Used to categorize configuration elements in several "required skills". Use this feature if you need to hide a parameter to novice users. I<< Optional. Type enum. choice: 'master', 'advanced', 'beginner'. upstream_default: 'beginner'.  >> 
+Used to categorize configuration elements in several "required skills". Use this feature if you need to hide a parameter to novice users. B<Deprecated> I<< Optional. Type enum. choice: 'master', 'advanced', 'beginner'. upstream_default: 'beginner'.  >> 
 
 =head2 level
 

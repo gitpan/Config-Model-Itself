@@ -1,7 +1,7 @@
 #
 # This file is part of Config-Model-Itself
 #
-# This software is Copyright (c) 2013 by Dominique Dumont.
+# This software is Copyright (c) 2014 by Dominique Dumont.
 #
 # This is free software, licensed under:
 #
@@ -60,31 +60,36 @@ my $build = $class->new
    # model_files => \%model_files ,
 
   'build_requires' => {
+    'File::Copy' => '0',
     'File::Copy::Recursive' => '0',
-    'Module::Build' => '0.3601',
+    'Module::Build' => '0.34',
     'Test::Differences' => '0',
     'Test::File::Contents' => '0',
     'Test::Memory::Cycle' => '0',
     'Test::More' => '0',
-    'namespace::autoclean' => '0'
+    'Tk' => '0'
   },
   'configure_requires' => {
-    'Config::Model' => '2.039',
-    'File::Slurp' => '0',
-    'Log::Log4perl' => '1.11',
-    'Module::Build' => '0.3601'
+    'Module::Build' => '0.34'
   },
   'requires' => {
-    'AnyEvent' => '0',
-    'Config::Model' => '2.039',
+    'Carp' => '0',
+    'Config::Model' => '2.055',
     'Config::Model::TkUI' => '1.210',
+    'Config::Model::Value' => '0',
     'Data::Compare' => '0',
-    'Log::Log4perl' => '0',
+    'Data::Dumper' => '0',
+    'File::Basename' => '0',
+    'File::Find' => '0',
+    'File::Path' => '0',
+    'IO::File' => '0',
+    'Log::Log4perl' => '1.11',
     'Mouse' => '0',
-    'Path::Class' => '0',
+    'Path::Tiny' => '0',
     'Pod::POM' => '0',
     'Tk' => '0',
-    'YAML::Any' => '0'
+    'YAML::Any' => '0',
+    'perl' => '5.010'
   },
 
    script_files  => [ 'config-model-edit' ],

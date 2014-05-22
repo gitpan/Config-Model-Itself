@@ -1,3 +1,5 @@
+# PODNAME: Config::Model::models::Itself::CommonElement::Assert
+# ABSTRACT:  Configuration class Itself::CommonElement::Assert
 =head1 NAME
 
 Config::Model::models::Itself::CommonElement::Assert - Configuration class Itself::CommonElement::Assert

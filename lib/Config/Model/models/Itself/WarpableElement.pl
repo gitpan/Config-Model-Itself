@@ -1,7 +1,7 @@
 #
 # This file is part of Config-Model-Itself
 #
-# This software is Copyright (c) 2013 by Dominique Dumont.
+# This software is Copyright (c) 2014 by Dominique Dumont.
 #
 # This is free software, licensed under:
 #
@@ -40,7 +40,6 @@
                 type       => 'leaf',
                 level      => 'hidden',
                 value_type => 'uniline',
-                experience => 'advanced',
                 warp       => {
                     follow  => { 't'            => '?type' },
                     'rules' => [ '$t eq "hash"' => { level => 'normal', } ]
@@ -64,7 +63,6 @@
                 type       => 'list',
                 level      => 'hidden',
                 cargo      => { type => 'leaf', value_type => 'string' },
-                experience => 'advanced',
                 warp       => {
                     follow  => { 't'            => '?type' },
                     'rules' => [ '$t eq "hash"' => { level => 'normal', } ]
@@ -75,7 +73,6 @@
                 type       => 'leaf',
                 level      => 'hidden',
                 value_type => 'string',
-                experience => 'advanced',
                 warp       => {
                     follow  => { 't'            => '?type' },
                     'rules' => [ '$t eq "list"' => { level => 'normal', } ]
@@ -107,7 +104,6 @@
                 type       => 'hash',
                 index_type => 'string',
                 level      => 'hidden',
-                experience => 'advanced',
                 warp       => {
                     follow  => { 't' => '?type' },
                     'rules' => [

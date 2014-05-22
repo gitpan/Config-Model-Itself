@@ -1,7 +1,7 @@
 #
 # This file is part of Config-Model-Itself
 #
-# This software is Copyright (c) 2013 by Dominique Dumont.
+# This software is Copyright (c) 2014 by Dominique Dumont.
 #
 # This is free software, licensed under:
 #
@@ -96,13 +96,11 @@
                         A => {
                             default    => 'Av',
                             level      => 'normal',
-                            permission => 'intermediate',
                             choice     => [qw/Av Bv Cv/],
                         },
                         B => {
                             default    => 'Bv',
                             level      => 'normal',
-                            permission => 'advanced',
                             choice     => [qw/Av Bv Cv/]
                         }
                     }
