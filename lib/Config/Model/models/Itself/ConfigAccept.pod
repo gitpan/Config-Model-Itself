@@ -118,6 +118,10 @@ Perl regular expression to assert the validity of the value. To check the whole 
 
 Raise an error if the test code snippet does returns false. Note this snippet will also be run on undefined value, which may not be what you want.I<< Optional. Type hash of node of class L<Itself::CommonElement::Assert|Config::Model::models::Itself::CommonElement::Assert> .  >> 
 
+=head2 warn_if
+
+Warn user if the code snippet returns true. I<< Optional. Type hash of node of class L<Itself::CommonElement::Assert|Config::Model::models::Itself::CommonElement::Assert> .  >> 
+
 =head2 warn_unless
 
 Warn user if the code snippet returns false. I<< Optional. Type hash of node of class L<Itself::CommonElement::Assert|Config::Model::models::Itself::CommonElement::Assert> .  >> 

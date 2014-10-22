@@ -42,7 +42,7 @@ file with a perl data structure. Configuration filename is made with instance na
 
 
 
-Note: backend is migrated with 'C<$old>' and with $old => "C<- syntax>" and 'C<$replace{perl}>' => "C<perl_file>", 'C<$replace{cds}>' => "C<cds_file>", 'C<$replace{ini}>' => "C<ini_file>"
+Note: backend is migrated with 'C<$old>' and with $old => "C<- syntax>" and 'C<$replace{cds}>' => "C<cds_file>", 'C<$replace{ini}>' => "C<ini_file>", 'C<$replace{perl}>' => "C<perl_file>"
 
 =head2 config_dir
 

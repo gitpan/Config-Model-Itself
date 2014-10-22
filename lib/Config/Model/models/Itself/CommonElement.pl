@@ -299,6 +299,11 @@ my %assert_payload = (
                   . 'also be run on undefined value, which may not be what you want.',
             },
 
+            'warn_if' => {
+                %assert_payload,
+                description => 'Warn user if the code snippet returns true',
+            },
+
             'warn_unless' => {
                 %assert_payload,
                 description =>
