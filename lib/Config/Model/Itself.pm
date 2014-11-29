@@ -8,7 +8,7 @@
 #   The GNU Lesser General Public License, Version 2.1, February 1999
 #
 package Config::Model::Itself ;
-$Config::Model::Itself::VERSION = '1.241';
+$Config::Model::Itself::VERSION = '1.242';
 use Mouse ;
 use Config::Model 2.055;
 use 5.010;
@@ -560,7 +560,7 @@ Config::Model::Itself - Model editor for Config::Model
 
 =head1 VERSION
 
-version 1.241
+version 1.242
 
 =head1 SYNOPSIS
 

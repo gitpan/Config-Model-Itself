@@ -88,7 +88,7 @@ my $build = $class->new
     'Path::Tiny' => '0',
     'Pod::POM' => '0',
     'Tk' => '0',
-    'YAML::Any' => '0',
+    'YAML::Tiny' => '0',
     'perl' => '5.010'
   },
 

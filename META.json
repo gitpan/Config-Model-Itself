@@ -41,7 +41,7 @@
             "Path::Tiny" : "0",
             "Pod::POM" : "0",
             "Tk" : "0",
-            "YAML::Any" : "0",
+            "YAML::Tiny" : "0",
             "perl" : "5.010"
          }
       },
@@ -70,6 +70,6 @@
          "web" : "http://github.com/dod38fr/config-model-itself"
       }
    },
-   "version" : "1.241"
+   "version" : "1.242"
 }
 

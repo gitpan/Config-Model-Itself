@@ -8,7 +8,7 @@
 #   The GNU Lesser General Public License, Version 2.1, February 1999
 #
 package Config::Model::Itself::BackendDetector ;
-$Config::Model::Itself::BackendDetector::VERSION = '1.241';
+$Config::Model::Itself::BackendDetector::VERSION = '1.242';
 use Pod::POM ;
 use File::Find ;
 
@@ -98,7 +98,7 @@ Config::Model::Itself::BackendDetector - Detect available read/write backends us
 
 =head1 VERSION
 
-version 1.241
+version 1.242
 
 =head1 SYNOPSIS
 
